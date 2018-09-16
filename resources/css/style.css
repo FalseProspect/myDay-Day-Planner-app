@@ -1,0 +1,402 @@
+* {
+  margin:0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+ /*Credit to Max Sandelin for base layout*/
+
+:root{
+  --mainAccent: #46237a;
+  --inputTextColor: #fff;                     /* Light: #ffffff               | Dark:#282828 */
+  --backColor: #edf0f1;                       /* Light: #edf0f1               | Dark:#282828 */
+  --itemColor: #ffffff;                       /* Light: #ffffff               | Dark:#454545 */
+  --containerTextColor: #666;                 /* Light: #666666               | Dark:#282828 */
+  --menuHoverColor: #999;                     /* Light: #999999               | Dark:#444444 */
+  --itemTextColor: #444;                      /* Light: #444444               | Dark:#DDDDDD */
+  --buttonColor: #fff;                        /* Light: #ffffff               | Dark:#282828 */
+  --itemCompleteColor: rgba(255,255,255,.25); /* Light: RGBA(255,255,255,.25) | Dark:RGBA(68,68,68,.3) */
+}
+
+body{
+  background: var(--backColor);
+  padding: 80px 0 0 0;
+}
+
+.noFill{
+  fill: none;
+}
+
+header{
+  width: 100%;
+  height: 80px;
+  position: fixed;
+  padding: 15px;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  background: var(--mainAccent);
+  box-shadow: 0px 2px 4px rgba(44, 62, 80, 0.15);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+header input{
+  margin-left: 200px;
+  width: calc(100% - 200px); /*Menu and Logo svg = ~200px*/
+  height: 50px;
+  float: left;
+  color: var(--inputTextColor);
+  font-size: 15px;
+  text-indent: 18px;
+  padding: 0 60px 0 0;
+  background: rgba(255, 255, 255,0.2);
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  border: 0;
+  box-shadow: none;
+  outline: none;
+  appearance: none;
+}
+
+header input::placeholder{
+  color: rgba(255,255,255,0.9);
+}
+
+header button svg .fill{
+  fill: var(--mainAccent);
+}
+
+header button svg{
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -8px 0 0 -8px;
+}
+
+header button{
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 2;
+  border-radius: 25px;
+  background: var(--buttonColor);
+  border: 0px;
+  box-shadow: none;
+  outline: none;
+  cursor: pointer;
+}
+
+header button#Menu{
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  z-index: 3;
+  border-radius: 25px;
+  background:none;
+  border: 0px;
+  box-shadow: none;
+  outline: none;
+  cursor: pointer;
+}
+
+header button#Menu svg .fill{
+  fill: var(--buttonColor);
+}
+
+header button#Menu svg {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 40%;
+  left: 35%;
+  margin: -15 0 0 -15;
+}
+
+header button#logo{
+  width: 140px;
+  height: 50px;
+  position: absolute;
+  top: 16px;
+  left: 63px;
+  z-index: 4;
+  background:none;
+  border: 0px;
+  box-shadow: none;
+  outline: none;
+  cursor: pointer;
+}
+
+header button#logo svg {
+  width: 140px;
+  height: 50px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0 0 0 0;
+}
+
+header button#logo svg .fill{
+  fill: var(--buttonColor);
+}
+
+.container{
+  margin-left: 0px;
+  width: 100%;
+  float: left;
+  padding: 15px;
+  transition: transform 1s ease;
+}
+
+div#itemBin.container::before{
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  color: var(--containerTextColor);
+}
+div#itemBin.container:empty::before{
+  content: "JUST DO IT"; /*Add a quote generator*/
+  margin: 15px 0 0 0;
+}
+
+ul.todoList{
+  width: 100%;
+  float: left;
+}
+
+ul.todoList li{
+  position: relative;
+  width: 100%;
+  min-height: 50px;
+  float: left;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--itemTextColor);
+  line-height: 22px;
+  background: var(--itemColor);
+  border-radius: 5px;
+  box-shadow: 0px 2px 4px rgba(44, 62, 80, 0.15);
+  margin: 0 0 10px 0;
+  padding: 14px 100px 14px 14px;
+}
+
+ul.todoList li:last-of-type{
+  margin:0;
+}
+
+ul.todoList li .buttons{
+  width: 100px;
+  height: 50px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+ul.todoList li .buttons button{
+  width: 50px;
+  height: 50px;
+  float: left;
+  background: none;
+  position: relative;
+  border: 0px;
+  box-shadow: none;
+  outline:none;
+  appearance: none;
+  cursor: pointer;
+}
+
+ul.todoList li .buttons button:last-of-type:before{
+  content: '';
+  width: 2px;
+  height: 30px;
+  position: absolute;
+  top:10px;
+  left: 0px;
+  background: var(--backColor);
+}
+
+ul.todoList li .buttons button svg{
+width: 22px;
+height: 22px;
+position: absolute;
+top: 50%;
+left: 50%;
+margin: -11px 0 0 -11px;
+}
+
+ul.todoList li .buttons button.complete svg {
+  border-radius: 11px;
+  border: 1.5px solid var(--mainAccent);
+  transition: background 0.2s ease;
+}
+
+ul.todoList li.complete .buttons button.complete svg{
+  background: var(--mainAccent);
+  border: 0px;
+}
+
+ul.todoList li:not(.complete) .buttons button.complete:hover svg{
+  background: var(--mainAccent);
+}
+
+ul.todoList li:not(.complete) .buttons button.complete:hover svg .fill{
+  fill: var(--itemColor);
+}
+
+ul.todoList li.complete .buttons button.complete svg .fill{
+  fill: var(--itemColor);
+}
+
+ul.todoList li .buttons button svg .fill{
+  transition: fill 0.2s ease;
+}
+
+ul.todoList li .buttons button.remove svg .fill{
+  fill: #c0cecb;
+}
+
+ul.todoList li .buttons button.remove:hover svg .fill{
+  fill: #e85656;
+}
+
+ul.todoList li .buttons button.complete svg .fill{
+  fill: var(--mainAccent);
+}
+
+ul.todoList{
+  position: relative;
+  padding: 20px 0 0 0;
+  margin: 15px 0 0 0;
+}
+
+ul.todoList:nth-child(1){
+  position: relative;
+  padding: 0 0 0 0;
+}
+
+ul.todoList::before{
+  width: 90%;
+  height: 1px;
+  display: block;
+  position: relative;
+  content: '';
+  margin: 0 auto 23px auto;
+  background: var(--mainAccent);
+  top: -4px;
+  z-index: 4;
+  background-size: auto;
+}
+
+ ul.todoList li:nth-child(1):before{
+  width: 100px;
+  height: 20px;
+  display: block;
+  position: absolute;
+  text-align: center;
+  font-size: 14px;
+  color: var(--containerTextColor);
+  content: attr(data-date);
+  margin: 0 auto;
+  padding: 0 5px 0 5px;
+  background: var(--backColor);
+  z-index: 5;
+  top: -38px;
+  left: calc(50% - 50px);
+} 
+
+
+.menu{
+  position: fixed;
+  width: 200px;
+  background: var(--backColor);
+  height: 100%; 
+  transform: translateX(-200px);
+  transition: transform .3s ease;
+}
+
+.menu a{
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 4em;
+  padding: 1.5em 0 0 0;
+  margin: 1em 0 1em 0;
+  text-decoration: none;
+  text-align: center;
+  background: var(--backColor);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  cursor: pointer;
+  color: var(--containerTextColor);
+}
+
+.menu a:visited{
+  color: var(--containerTextColor);
+}
+
+.menu a:hover{
+  color: var(--inputTextColor);
+  background: var(--menuHoverColor);
+  cursor: pointer;
+}
+
+.menu a:active{
+  color: var(--inputTextColor);
+}
+
+.menu a svg{
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 43%;
+  left: 15%;
+  margin: -8px 0 0 -8px;
+  fill: var(--containerTextColor);
+}
+
+.menu a svg#doneIcon{
+  border-radius: 15px;
+  border: 1.5px solid var(--containerTextColor);
+}
+
+.menu a:hover svg,
+.menu a:active svg{
+  fill: var(--inputTextColor);
+}
+
+.menu a:hover svg#doneIcon,
+.menu a:active svg#doneIcon{
+  border: 1.5px solid var(--inputTextColor);
+}
+
+.menu a div#themeLabel,
+.menu a div#nightLabel{
+  margin-left: 38px;
+}
+
+.menu a div#doneLabel{
+  margin-left: 22px;
+}
+
+ul.todoList li.complete,
+ul.todoList li.deleted {
+  background: var(--itemCompleteColor);
+  text-decoration: line-through;
+}
+
+ul.todoList li.deleted .buttons button.complete{
+  visibility: hidden;
+}
+ul.todoList li.deleted .buttons button.remove{
+  margin-left: 25%;
+}
