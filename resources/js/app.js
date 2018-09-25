@@ -3,11 +3,8 @@
   //Todo List Data
   let data = (localStorage.getItem('todoList')) ? JSON.parse(localStorage.getItem('todoList')) : {
   todo: [],
-  todoObjects:[],
   completed: [],
-  completedObjects: [],
   deleted: [],
-  deletedObjects: []
   };
   
   // Theme Index
@@ -28,7 +25,7 @@ const viewings = {
   DONE_TASKS: 'completed',
 }
 
-//Initiat Current View
+//Initiate starting View
 let view = viewings.TASKS;
 
 //Themes
@@ -37,17 +34,21 @@ const theme = function(themeName,mainColor){
   this.mainColor = mainColor;
 };
 const themes = [
-new theme('Royal','RGBA(70,35,122,1)'),     // #46237a RGBA(70,35,122,1)
-new theme('Pumpkin','RGBA(255,78,0,1)'),    // #FF4E00 RGBA(255,78,0,1)
-new theme('Rum','RGBA(80,31,50,1)'),        // #501F32 RGBA(80,31,50,1)
-new theme('Honey','RGBA(243,167,18,1)'),    // #F3A712 RGBA(243,167,18,1)
-new theme('Ocean','RGBA(69,74,222,1)'),     // #454ADE RGBA(69,74,222,1)
-new theme('Mint','RGBA(37,185,154,1)')];    // #25B99A RGBA(37,185,154,1)
+  new theme('Ocean','RGBA(69,74,222,1)'),     // #454ADE RGBA(69,74,222,1)
+  new theme('Pumpkin','RGBA(255,78,0,1)'),    // #FF4E00 RGBA(255,78,0,1)
+  new theme('Rum','RGBA(80,31,50,1)'),        // #501F32 RGBA(80,31,50,1)
+  new theme('Honey','RGBA(243,167,18,1)'),    // #F3A712 RGBA(243,167,18,1)
+  new theme('Salmon','RGBA(255,113,91,1)'),
+  new theme('Skyblue', 'skyblue'),
+  new theme('Royal','RGBA(70,35,122,1)'),     // #46237a RGBA(70,35,122,1)
+  new theme('Mint','RGBA(37,185,154,1)')];    // #25B99A RGBA(37,185,154,1)
 
-const itemMixen = function(value){
-  value.createDate = (new Date()).toLocaleDateString('en-US');
-  value.completedDate;
-  value.deletedDate;
+//List Item Class
+let listItem = function(obj){
+    obj.creationDate= (new Date()).toLocaleDateString('en-US'),
+    obj.completionDate= '',
+    obj.deletionDate= '',
+    obj.dateID= (new Date());
 };
 
 //Initial Todo Render
@@ -64,6 +65,52 @@ let menuOpen = false;
 
 //Command Variable
 let cmdMode = false
+
+//Sumbit Command
+function sumbitCommand(value){
+  let command = value.split(' ')
+  let aurgument = command.slice(1,).join(' ');
+  document.getElementById('item').value = ''; //Clear input bar
+  //console.log(aurgument);
+  switch(command[0]){
+    case 'theme':
+      themeSwitch(aurgument);
+      break;
+    case 'cmd':
+      toggleCommandMode(JSON.parse(aurgument));
+      break;
+    case 'night':
+      setNightMode(JSON.parse(aurgument));
+      break;
+    case 'unrender':
+    case 'ur-':
+      unRenderList();
+      break;
+    case 'render':
+    case 'r-':
+      renderList(aurgument);
+      break;
+    case 'clear':
+    case 'c-':
+      localStorage.clear();
+      break;
+    case 'view':
+    case 'v-':
+      console.log(view);
+      break;
+    case 'newList':
+    case 'newlist':
+    case 'nl-':
+      newList(aurgument);
+      break;
+    case 'newItem':
+    case 'ni-':
+      submitItem(aurgument,true);
+      break;
+    default:
+      console.log(`"${command[0]}" command not recognized`);
+  }
+}
 
 //Menu Event Listener
 document.getElementById('Menu').addEventListener('click', menuClickEvent);
@@ -147,54 +194,7 @@ function toggleCommandMode(status) {
   document.getElementById('item').value = '';
 }
 
-//Sumbit Command
-function sumbitCommand(value){
-  let command = value.split(' ')
-  let aurgument = command.slice(1,).join(' ');
-  document.getElementById('item').value = ''; //Clear input bar
-  //console.log(aurgument);
-  switch(command[0]){
-    case 'theme':
-      themeSwitch(aurgument);
-      break;
-    case 'cmd':
-      toggleCommandMode(JSON.parse(aurgument));
-      break;
-    case 'night':
-      setNightMode(JSON.parse(aurgument));
-      break;
-    case 'unrender':
-    case 'ur-':
-      unRenderList();
-      break;
-    case 'render':
-    case 'r-':
-      renderList(aurgument);
-      break;
-    case 'clear':
-    case 'c-':
-      localStorage.clear();
-      break;
-    case 'view':
-    case 'v-':
-      console.log(view);
-      break;
-    case 'newList':
-    case 'newlist':
-    case 'nl-':
-      newList(aurgument);
-      break;
-    case 'newItem':
-    case 'ni-':
-      submitItem(aurgument,true);
-      break;
-    default:
-      console.log(`"${command[0]}" command not recognized`);
-  }
-}
-
-
-
+//Submit item
 function submitItem(value,override){
   //Command Mode Check
   switch(value){
@@ -207,17 +207,19 @@ function submitItem(value,override){
       else{
       //Normal Submit
       view !== viewings.TASKS ? renderList(viewings.TASKS): 0; //Switch to task list before submit
-      let newItem = {text: value};                //Make submit into a object
-      itemMixen(newItem);                         //Add metadata to object
-      data.todo.push(value);                      //Push to data array
-      data.todoObjects.push(newItem);             //Push Mixen'd Object
-      addItemTodo(value);                         //Add item to list
+      let newItem = {
+        task: value
+      };
+      listItem(newItem);
+      data.todo.push(newItem);                    //Push to data array
+      addItemTodo(newItem);                  //Add item to list
       document.getElementById('item').value = ''; //Clear input bar
       dataObjectUpdate();                         //Update
       }
   }
 };
 
+/////// RENDERING FUNCTIONS \\\\\\\
 
 //List Renderer
 function renderList(renderView){
@@ -273,112 +275,25 @@ function unRenderList(){
   console.log('Unrender done');
 };
 
+/////// LOCAL STORAGE SAVING \\\\\\\
 
-//Update Data Object Local Storage
+//Save Local Storage
 function dataObjectUpdate(){
   localStorage.setItem('todoList', JSON.stringify(data));
   console.log(data);
 };
 
-function removeItem(){
-  let deletingItem = this.parentNode.parentNode;
-  let itemClass = deletingItem.className;
-  let itemValue = deletingItem.innerText; //Gets the text only, not list item
-  let parentList = deletingItem.parentNode;
-  let targetIndex;
-  //Array Mutation and className change
-  switch (itemClass){
-    case 'uncomplete':
-      targetIndex = data.todo.indexOf(itemValue);
-      itemClass = 'deleted';
-      data.todoObjects[targetIndex].deletedDate = new Date().toLocaleDateString('en-US');
-      data.deleted.push(itemValue)
-      data.deletedObjects.push(data.todoObjects[targetIndex]);
-      data.todo.splice(targetIndex,1);
-      data.todoObjects.splice(targetIndex,1);
-      break;
-    case 'complete':
-      targetIndex = data.completed.indexOf(itemValue);
-      itemClass = 'deleted';
-      data.completedObjects[targetIndex].deletedDate = new Date().toLocaleDateString('en-US');
-      data.deleted.push(itemValue)
-      data.deletedObjects.push(data.completedObjects[targetIndex]);
-      data.completed.splice(targetIndex,1);
-      data.completedObjects.splice(targetIndex,1);
-      break;
-    case 'deleted':
-      targetIndex = data.deleted.indexOf(itemValue);
-      data.deleted.splice(targetIndex,1);
-      data.deletedObjects.splice(targetIndex,1);
-      break;
-  }
-  parentList.removeChild(deletingItem); //Remove from list it's in
-  if(!parentList.childNodes[0]){
-    parentList.parentNode.removeChild(parentList);
-    dataObjectUpdate();
-    return;
-  }
-  dataObjectUpdate();
-}
+/////// ITEM MANIPULATION FUNCTIONS \\\\\\\
 
-function completeItem(){
-  let completedItem = this.parentNode.parentNode;
-  let listParent = completedItem.parentNode;
-  let itemClass = completedItem.className;
-  let itemValue = completedItem.innerText;
-  let targetIndex;
-
-  switch (itemClass){
-    case 'uncomplete':            //Change item for 'uncomplete' to 'complete'//
-      targetIndex = data.todo.indexOf(itemValue);
-      //Update timestamp values
-      data.todoObjects[targetIndex].completedDate = new Date().toLocaleDateString('en-US');
-      completedItem.setAttribute('title',`Made: ${data.todoObjects[targetIndex].createDate} \nDone: ${data.todoObjects[targetIndex].completedDate}`);
-      console.log(data.todoObjects[targetIndex].completedDate);
-      //Object and list mutations
-      data.completed.push(itemValue);
-      data.completedObjects.push(data.todoObjects[targetIndex]);
-      data.todo.splice(targetIndex,1);
-      data.todoObjects.splice(targetIndex,1);
-      //Rendering and DOM manipulation
-      completedItem.className = "complete";
-      listParent.removeChild(completedItem);
-      listParent.insertBefore(completedItem, listParent.childNodes[document.getElementsByClassName("uncomplete").length]); //Insert under last uncomplete object
-      break;
-    case 'complete':              //Change item from "complete" to "uncomplete"//
-      targetIndex = data.completed.indexOf(itemValue);
-      //Update timestamp values
-      data.completedObjects[targetIndex].completedDate = '';
-      completedItem.setAttribute('title',`Made: ${data.completedObjects[targetIndex].createDate}`);
-      //Object and list mutations
-      data.todo.push(itemValue);
-      data.todoObjects.push(data.completedObjects[targetIndex]);
-      data.completed.splice(targetIndex,1);
-      data.completedObjects.splice(targetIndex,1);
-      //Rendering and DOM manipulation
-      completedItem.className = "uncomplete";
-      listParent.removeChild(completedItem);
-      if(view === viewings.DONE_TASKS){
-        listParent.childNodes[0] ? 0 : listParent.parentNode.removeChild(listParent);
-        dataObjectUpdate();
-        return;}
-      listParent.insertBefore(completedItem, listParent.childNodes[0]);
-      break;
-  }
-  dataObjectUpdate();
-}
-
-//Add todo item
-function addItemTodo(value, completed){
-  
+//ADD item
+function addItemTodo(obj, completed){
   //Create list elem and add text
   let item = document.createElement('li');
-  item.innerText = value;
-  
+  item.innerText = obj.task;
   //Create button elements
   let buttons = document.createElement('div');
   buttons.classList.add ('buttons');
-  
+
   let remove = document.createElement('button');
   remove.classList.add ('remove');
   remove.innerHTML = removeSVG;
@@ -401,38 +316,142 @@ function addItemTodo(value, completed){
   
   //Assign Object and DOM manipulations
   let itemIndex;
+
   switch (item.className){
     case 'uncomplete':
-    itemIndex = data.todo.indexOf(value);
-    item.setAttribute('title',`Made: ${data.todoObjects[itemIndex].createDate}`);
-    item.setAttribute('data-date',data.todoObjects[itemIndex].createDate);
-    break;
+    itemIndex = data.todo.indexOf(obj.task);
+    item.setAttribute('data-date', obj.creationDate);
+    item.setAttribute('title',`Made: ${obj.creationDate}`);
+      break;
     case 'complete':
-    itemIndex = data.completed.indexOf(value);
-    if(!data.completedObjects[itemIndex].completedDate){data.completedObjects[itemIndex].completedDate = new Date().toLocaleDateString('en-US');}
-    item.setAttribute('title',`Made: ${data.completedObjects[itemIndex].createDate} \nDone: ${data.completedObjects[itemIndex].completedDate}`);
-    item.setAttribute('data-date',data.completedObjects[itemIndex].completedDate);
-    break;
+    itemIndex = data.completed.indexOf(obj.task);
+    item.setAttribute('data-date', obj.completionDate);
+    item.setAttribute('title',`Made: ${obj.creationDate}\nDone: ${obj.completionDate}`);
+      break;
     case 'deleted':
-    itemIndex = data.deleted.indexOf(value);
-    item.setAttribute('title',`Deleted: ${data.deletedObjects[itemIndex].deletedDate}`);
-    item.setAttribute('data-date',data.deletedObjects[itemIndex].deletedDate);
-    break;
+    itemIndex = data.deleted.indexOf(obj.task);
+    item.setAttribute('data-date', obj.deletionDate);
+    item.setAttribute('title',`Deleted: ${obj.deletionDate}`);
+      break;
   }
+
   //Decide which list to add to
   let list;
-  !document.getElementById(item.getAttribute('data-date')) ? newList(item.getAttribute('data-date')) : 0;
+
+  if (!document.getElementById(item.getAttribute('data-date'))) newList(item.getAttribute('data-date'));
   list = document.getElementById(item.getAttribute('data-date'));
 
-    function newList(listValue){
-      let container = document.getElementById('itemBin');
-      let newList = document.createElement('ul');
-      newList.className = 'todoList'
-      newList.id = listValue;
-      container.insertBefore(newList, container.childNodes[0]);
-      console.log(newList.id);
-    }
+  function newList(listValue){
+    let container = document.getElementById('itemBin');
+    let newList = document.createElement('ul');
+    newList.className = 'todoList'
+    newList.id = listValue;
+    container.insertBefore(newList, container.childNodes[0]);
+    console.log(newList.id);
+  }
 
   //Insert to list
   list.insertBefore(item, list.childNodes[complete ? document.getElementsByClassName("uncomplete").length : 0]);
 }
+
+//COMPLETE Item
+function completeItem(){
+  let completedItem = this.parentNode.parentNode;
+  let listParent = completedItem.parentNode;
+  let itemClass = completedItem.className;
+  let itemValue = completedItem.innerText;
+  let itemIndex;
+  let itemPush;
+  
+  switch (itemClass){
+    //Change item for 'uncomplete' to 'complete'
+    case 'uncomplete':            
+      //Find and temp clone index
+      itemIndex = data.todo.findIndex((item => item.task === itemValue));
+      itemPush = data.todo[itemIndex];
+      itemPush.completionDate = (new Date()).toLocaleDateString('en-US');
+      //Update timestamp values
+      completedItem.setAttribute('title',`Made: ${itemPush.creationDate}\nDone: ${itemPush.completionDate}`);
+      completedItem.setAttribute('data-date', itemPush.completionDate);
+      //Object and list mutations
+      data.completed.push(itemPush);
+      data.todo.splice(itemIndex,1);
+      //Rendering and DOM manipulation
+      completedItem.className = "complete";
+      listParent.removeChild(completedItem);
+      listParent.insertBefore(completedItem, listParent.childNodes[document.getElementsByClassName("uncomplete").length]); //Insert under last uncomplete object
+      break;
+    //Change item from "complete" to "uncomplete"
+    case 'complete':              
+      //Find and temp clone index
+      itemIndex = data.completed.findIndex((item => item.task === itemValue));
+      itemPush = data.completed[itemIndex];
+      itemPush.completionDate = '';
+      //Update timestamp values
+      completedItem.setAttribute('title',`Made:${itemPush.creationDate}`);
+      //Object and list mutations
+      data.todo.push(itemPush);
+      data.completed.splice(itemIndex,1);
+      //Rendering and DOM manipulation
+      completedItem.className = "uncomplete";
+      listParent.removeChild(completedItem);
+      if(view === viewings.DONE_TASKS){
+        listParent.childNodes[0] ? 0 : listParent.parentNode.removeChild(listParent);
+        dataObjectUpdate();
+        return;}
+      listParent.insertBefore(completedItem, listParent.childNodes[0]);
+      break;
+  }
+  dataObjectUpdate();
+}
+
+//REMOVE Item
+function removeItem(){
+  let deletingItem = this.parentNode.parentNode;
+  let itemClass = deletingItem.className;
+  let itemValue = deletingItem.innerText; //Gets the text only, not list item
+  let parentList = deletingItem.parentNode;
+  let itemIndex;
+  let itemPush;
+
+  //Array Mutation and className change
+  switch (itemClass){
+    case 'uncomplete':
+      //Find and temp store item object
+      itemIndex = data.todo.findIndex((item => item.task === itemValue));
+      itemPush = data.todo[itemIndex];
+      itemPush.deletionDate = (new Date()).toLocaleDateString('en-US');
+      //Set Class and push/transfer
+      itemClass = 'deleted';
+      data.deleted.push(itemPush)
+      data.todo.splice(itemIndex,1);
+      break;
+    case 'complete':
+      //Find and temp store item object
+      itemIndex = data.completed.findIndex((item => item.task === itemValue));
+      itemPush = data.completed[itemIndex];
+      itemPush.deletionDate = (new Date()).toLocaleDateString('en-US');
+      //Set class and push/transfer
+      itemClass = 'deleted';
+      data.deleted.push(itemPush)
+      data.completed.splice(itemIndex,1);
+      break;
+    case 'deleted':
+      //Find and delete item
+      itemIndex = data.deleted.findIndex((item => item.task === itemValue));
+      data.deleted.splice(itemIndex,1);
+      break;
+  }
+
+  //Remove item from the list it's in
+  parentList.removeChild(deletingItem);
+  //If item was the last in its list, delete the list
+  if(!parentList.childNodes[0]){
+    parentList.parentNode.removeChild(parentList);
+    dataObjectUpdate();
+    return;
+  }
+  //Save
+  dataObjectUpdate();
+}
+
