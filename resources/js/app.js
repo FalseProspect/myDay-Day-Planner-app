@@ -48,7 +48,7 @@ let listItem = function(obj){
     obj.creationDate= (new Date()).toLocaleDateString('en-US'),
     obj.completionDate= '',
     obj.deletionDate= '',
-    obj.dateID= (new Date());
+    obj.dateID= ((new Date()).toString());
 };
 
 //Initial Todo Render
