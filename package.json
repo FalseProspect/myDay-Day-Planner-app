@@ -1,0 +1,38 @@
+{
+  "name": "myday-day-planner-app",
+  "version": "1.0.0",
+  "description": "Decription:\r The myDay:Day Planner (web)app is a productivity app that groups your day by day task in a clear and clean mannner.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FalseProspect/myDay-Day-Planner-app.git"
+  },
+  "keywords": [
+    "todo",
+    "tasklist",
+    "dayplanner",
+    "habit",
+    "webapp",
+    "productivity"
+  ],
+  "author": "Keith A. Rose",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FalseProspect/myDay-Day-Planner-app/issues"
+  },
+  "homepage": "https://github.com/FalseProspect/myDay-Day-Planner-app#readme",
+  "dependencies": {
+    "cookie-session": "^2.0.0-beta.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.4",
+    "multiparty": "^4.2.1",
+    "passport": "^0.4.0",
+    "passport-google-oauth20": "^1.0.0"
+  }
+}

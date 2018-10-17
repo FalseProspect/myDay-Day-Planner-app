@@ -1,9 +1,16 @@
 //Checkout: phase-2
 
 //localStorage.clear();
+
+//Client Username
+let username = '';
+let userClient = document.getElementsByTagName('meta')[3].content; //Check if user is signed in
+let xhr = new XMLHttpRequest();
+xhr.withCredentials = true;  
+
 // Local Storage
   //Todo List Data
-  let data = (localStorage.getItem('todoList')) ? JSON.parse(localStorage.getItem('todoList')) : {
+  let data = (localStorage.getItem('todoList') && !userClient) ? JSON.parse(localStorage.getItem('todoList')) : {
   todo: [],
   completed: [],
   deleted: [],
@@ -14,6 +21,9 @@
 
   // Night mode status
   let nightMode = (localStorage.getItem('nightMode')) ? JSON.parse(localStorage.getItem('nightMode')) : false;
+
+  // menuOpen status
+  let menuOpen = (localStorage.getItem('menuOpen')) ? JSON.parse(localStorage.getItem('menuOpen')) : false;
 
 // SVG Icons
 let removeSVG = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 22 22" style="enable-background:new 0 0 22 22;" xml:space="preserve"><rect class="noFill" width="22" height="22"/><g><g><path class="fill" d="M16.1,3.6h-1.9V3.3c0-1.3-1-2.3-2.3-2.3h-1.7C8.9,1,7.8,2,7.8,3.3v0.2H5.9c-1.3,0-2.3,1-2.3,2.3v1.3c0,0.5,0.4,0.9,0.9,1v10.5c0,1.3,1,2.3,2.3,2.3h8.5c1.3,0,2.3-1,2.3-2.3V8.2c0.5-0.1,0.9-0.5,0.9-1V5.9C18.4,4.6,17.4,3.6,16.1,3.6z M9.1,3.3c0-0.6,0.5-1.1,1.1-1.1h1.7c0.6,0,1.1,0.5,1.1,1.1v0.2H9.1V3.3z M16.3,18.7c0,0.6-0.5,1.1-1.1,1.1H6.7c-0.6,0-1.1-0.5-1.1-1.1V8.2h10.6L16.3,18.7L16.3,18.7z M17.2,7H4.8V5.9c0-0.6,0.5-1.1,1.1-1.1h10.2c0.6,0,1.1,0.5,1.1,1.1V7z"/></g><g><g><path class="fill" d="M11,18c-0.4,0-0.6-0.3-0.6-0.6v-6.8c0-0.4,0.3-0.6,0.6-0.6s0.6,0.3,0.6,0.6v6.8C11.6,17.7,11.4,18,11,18z"/></g><g><path class="fill" d="M8,18c-0.4,0-0.6-0.3-0.6-0.6v-6.8C7.4,10.2,7.7,10,8,10c0.4,0,0.6,0.3,0.6,0.6v6.8C8.7,17.7,8.4,18,8,18z"/></g><g><path class="fill" d="M14,18c-0.4,0-0.6-0.3-0.6-0.6v-6.8c0-0.4,0.3-0.6,0.6-0.6c0.4,0,0.6,0.3,0.6,0.6v6.8C14.6,17.7,14.3,18,14,18z"/></g></g></g></svg>';
@@ -47,10 +57,11 @@ const themes = [
 
 //List Item Class
 let listItem = function(obj){
-    obj.creationDate= (new Date()).toLocaleDateString('en-US'),
-    obj.completionDate= '',
-    obj.deletionDate= '',
-    obj.dateID= ((new Date()).toString());
+  obj.uID=((Date.now() + Math.random()).toString()),
+  obj.dateID= ((new Date()).toString()),
+  obj.creationDate= (new Date()).toLocaleDateString('en-US'),
+  obj.completionDate= '',
+  obj.deletionDate= ''
 };
 
 //Initial Todo Render
@@ -62,8 +73,11 @@ themeSwitch(themeIndex);
 //Set Night Mode Status
 setNightMode(nightMode);
 
-// Menu status
-let menuOpen = false; 
+//Menu Status
+menuClickEvent(menuOpen);
+
+
+/////// Command Mode (Debugging) \\\\\\\\
 
 //Command Variable
 let cmdMode = false
@@ -114,40 +128,130 @@ function sumbitCommand(value){
   }
 }
 
+/////// CHECK USER SIGN IN \\\\\\\\
+
+//Set values if a user is signed in
+(function profileTabUsername(){
+  //Setup user's Profile Tab
+  let profileTab = document.getElementById('profile');
+  if(profileTab.innerText !== "Sign-In"){
+    profileTab.setAttribute('data-profile',' ');
+    profileTab.setAttribute('href','/auth/logout');
+  }else{
+  profileTab.setAttribute('data-profile','(Offline)');
+  profileTab.setAttribute('href','/auth/google');
+  }
+  //If user is signed in, fetch their tasks
+  if(userClient){
+    fetch('http://127.0.0.1:9001/fetch',{
+      method: "GET",
+      credentials: 'include' })
+    .then(res => res.json())
+    .then(data => extractJSON(data)).catch(err => console.log(err));
+  };
+})();
+
+/////// FETCHED JSON PRINTING \\\\\\\\
+
+function extractJSON(dataArr){
+  let arr = dataArr;
+  for (let i in arr){
+    if(arr[i].deletionDate){
+      //console.log(`Task:${arr[i].task} = deleted`);
+      data.deleted.push(arr[i]);
+    } else if (arr[i].completionDate){
+      //console.log(`Task:${arr[i].task} = completed`);
+      data.completed.push(arr[i]);
+    } else if (arr[i].creationDate){
+      //console.log(`Task:${arr[i].task} = todo`);
+      data.todo.push(arr[i]);
+    }
+    renderList(view);
+  }
+}
+
+/////// POST REQUEST \\\\\\\\
+
+function post(obj,index) {
+  if(!userClient){return};                                                                    //Returns if user is not signed in
+  let form = document.createElement("form");                                                  //Temp form is made
+  form.setAttribute("method", 'post');
+  form.setAttribute("enctype", 'multipart/form-data"');                                       //Encrypted to be parsed by multiparty
+  form.setAttribute("action", '/');
+
+  for(let key in obj) {
+      if(obj.hasOwnProperty(key)) {
+          let hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "text");
+          hiddenField.setAttribute("name", key);
+          hiddenField.setAttribute("value", obj[key]);
+          form.appendChild(hiddenField);
+      }
+  }
+  document.body.appendChild(form);  
+  let formData = new FormData(form);                                                          //Convert to FormData
+  xhr.onreadystatechange = ()=>{
+    if(xhr.readyState == XMLHttpRequest.DONE){data.todo[index]=JSON.parse(xhr.responseText)}  //Receives the saved DB model to replace temp object 
+  }
+  xhr.open('POST','http://127.0.0.1:9001/task');                                              //Open XHR Socket
+  xhr.send(formData);                                                                         //Send FormData to Node
+  document.body.removeChild(form);                                                            //Removes the temp form from html
+}
+
+/////// UPDATE REQUEST \\\\\\\\
+
+function update(oldObj,newObj){                                                               //Receives the Old Model and New Model
+  if(!userClient){return};
+  let oldItem = JSON.stringify(oldObj);                                                       //Stringify Old Model
+  let newItem = JSON.stringify(newObj);                                                       //Stringify New Model
+  let sendItem = `[${oldItem},${newItem}]`;                                                   //Appends into single array with two objects                                                           
+  xhr.open('POST','http://127.0.0.1:9001/update');                                            //Open XHR Socket
+  xhr.send(sendItem);                                                                         //Send to Node
+}
+
+/////// REMOVE REQUEST \\\\\\\\
+
+function remove(obj){
+  if(!userClient){return};
+  let removeItem = JSON.stringify(obj);                                                       //Stringify Target Model
+  xhr.open('POST','http://127.0.0.1:9001/remove');                                            //Open Socket
+  xhr.send(removeItem);                                                                       //Send to Node
+}
+
+/////// USER INTERFACE FUNCTIONS \\\\\\\\
+
 //Menu Event Listener
-document.getElementById('Menu').addEventListener('click', menuClickEvent);
-
-function menuClickEvent(){
+document.getElementById('Menu').addEventListener('click', ()=>{
   menuOpen = !menuOpen;
-  //console.log(`Menu is: ${menuOpen === true ? 'open':'closed'}`);
+  menuClickEvent(menuOpen);
+})
 
+function menuClickEvent(value){
   document.getElementById('itemBin').style.marginLeft = menuOpen === true ? '200px': '0';
   document.getElementById('sideMenu').style.transform = menuOpen === true ? 'translateX(0px)': 'translateX(-200px)';
   document.getElementById('itemBin').style.width = menuOpen === true ? 'calc(100% - 200px)': '100%';
-};
-
+  localStorage.setItem('menuOpen', JSON.stringify(value));
+}
 
 //Theme change click event
 document.getElementById('theme').addEventListener('click', function(){
   themeIndex !== themes.length - 1 ? themeIndex ++ : themeIndex = 0; 
-  //console.log(themeIndex);
   themeSwitch(themeIndex);
-});
+})
 
 //Theme Switcher
 function themeSwitch(index){
   let theme = themes[index];
-  //console.log(`Theme: ${theme.name}`);
   document.getElementById('themeLabel').innerHTML =`Theme: ${theme.name}`;
   document.documentElement.style.setProperty('--mainAccent', theme.mainColor);
   localStorage.setItem('themeIndex', JSON.stringify(index));
-};
+}
 
 //Night Mode toggle on click
 document.getElementById('night').addEventListener('click', function(){
   nightMode = !nightMode;
   setNightMode(nightMode);
-});
+})
 
 //Set Night Mode
 function setNightMode(value){
@@ -176,18 +280,20 @@ document.getElementById('done').addEventListener('click', function(){
   renderList(viewings.DONE_TASKS);
 });
 
+//Focus on input on load
+document.getElementById('item').focus();
+
 //Add button pressed
 document.getElementById('add').addEventListener('click', function(){
   let value = document.getElementById('item').value;
-  //Get text in input field if any
-  if(value){submitItem(value);}
-});
+  if(value){submitItem(value)}
+})
 
 //'Enter' press = submit
 document.getElementById('item').addEventListener('keydown',function (e) {
   let value = document.getElementById('item').value;
-  if (e.code === "Enter" && value) {submitItem(value);}
-  });
+  if (e.key === "Enter" && value) {submitItem(value)}
+  })
 
 //Toggle CommandMode
 function toggleCommandMode(status) {
@@ -205,18 +311,19 @@ function submitItem(value,override){
       toggleCommandMode(cmdMode); //toggle Command Mode
       break;
     default:
-      if(cmdMode && !override){sumbitCommand(value);return;} //Submit command in command mode
+      if(cmdMode && !override){sumbitCommand(value);return;} //Submit Command
       else{
-      //Normal Submit
-      view !== viewings.TASKS ? renderList(viewings.TASKS): 0; //Switch to task list before submit
-      let newItem = {
-        task: value
-      };
-      listItem(newItem);
-      data.todo.push(newItem);                    //Push to data array
-      addItemTodo(newItem);                  //Add item to list
-      document.getElementById('item').value = ''; //Clear input bar
-      dataObjectUpdate();                         //Update
+        //Normal Submit
+        view !== viewings.TASKS ? renderList(viewings.TASKS): 0; //Switch to task list before submit
+        let newItem = {
+          task: value
+        };
+        listItem(newItem);                                                //Mixin Object
+        data.todo.push(newItem);                                          //Push to Data
+        addItemTodo(newItem);                                             //Render Item
+        post(newItem,data.todo.findIndex((item => item === newItem)));    //POST (If signed-in)
+        document.getElementById('item').value = '';                       //Clear Input Bar
+        dataObjectUpdate();                                               //Save Data Array
       }
   }
 };
@@ -233,24 +340,24 @@ function renderList(renderView){
     //Render uncomplete task
       if (!data.todo.length && !data.completed.length) return;
       //Render uncomplete tasks
-      for (let i = 0; i < data.todo.length; i++){
+      for (let i in data.todo){
       let value = data.todo[i];
       addItemTodo(value);
       }
       //render complete tasks
-      for (let i = 0; i < data.completed.length; i++){
+      for (let i in data.completed){
       let value = data.completed[i];
       addItemTodo(value, true);
       }
       break;
     case viewings.DELETED: //Render deleted tasks only
-      for (let i = 0; i < data.deleted.length; i++){
+      for (let i in data.deleted){
       let value = data.deleted[i];
       addItemTodo(value);
       }
       break;
     case viewings.DONE_TASKS: //Render completed tasks only
-      for (let i = 0; i < data.completed.length; i++){
+      for (let i in data.completed){
       let value = data.completed[i];
       addItemTodo(value, true);
       }
@@ -270,7 +377,7 @@ function unRenderList(){
 
   let list = document.querySelectorAll('ul');
   if (list[0]){
-  for (let i = 0;i < list.length; i++){
+  for (let i = 0; i < list.length; i++){
   list[i].parentNode.removeChild(list[i]);
   }}
 
@@ -317,8 +424,8 @@ function addItemTodo(obj, completed){
   else {item.className = "deleted";}
   
   //Assign Object and DOM manipulations
+  
   let itemIndex;
-
   switch (item.className){
     case 'uncomplete':
     itemIndex = data.todo.indexOf(obj.task);
@@ -372,6 +479,7 @@ function completeItem(){
       itemIndex = data.todo.findIndex((item => item.task === itemValue));
       itemPush = data.todo[itemIndex];
       itemPush.completionDate = (new Date()).toLocaleDateString('en-US');
+      update(data.todo[itemIndex],itemPush);
       //Update timestamp values
       completedItem.setAttribute('title',`Made: ${itemPush.creationDate}\nDone: ${itemPush.completionDate}`);
       completedItem.setAttribute('data-date', itemPush.completionDate);
@@ -389,6 +497,7 @@ function completeItem(){
       itemIndex = data.completed.findIndex((item => item.task === itemValue));
       itemPush = data.completed[itemIndex];
       itemPush.completionDate = '';
+      update(data.completed[itemIndex],itemPush);
       //Update timestamp values
       completedItem.setAttribute('title',`Made:${itemPush.creationDate}`);
       //Object and list mutations
@@ -423,6 +532,7 @@ function removeItem(){
       itemIndex = data.todo.findIndex((item => item.task === itemValue));
       itemPush = data.todo[itemIndex];
       itemPush.deletionDate = (new Date()).toLocaleDateString('en-US');
+      update(data.todo[itemIndex],itemPush);
       //Set Class and push/transfer
       itemClass = 'deleted';
       data.deleted.push(itemPush)
@@ -433,6 +543,7 @@ function removeItem(){
       itemIndex = data.completed.findIndex((item => item.task === itemValue));
       itemPush = data.completed[itemIndex];
       itemPush.deletionDate = (new Date()).toLocaleDateString('en-US');
+      update(data.completed[itemIndex],itemPush);
       //Set class and push/transfer
       itemClass = 'deleted';
       data.deleted.push(itemPush)
@@ -441,6 +552,7 @@ function removeItem(){
     case 'deleted':
       //Find and delete item
       itemIndex = data.deleted.findIndex((item => item.task === itemValue));
+      remove(data.deleted[itemIndex]);
       data.deleted.splice(itemIndex,1);
       break;
   }
@@ -453,7 +565,6 @@ function removeItem(){
     dataObjectUpdate();
     return;
   }
-  //Save
   dataObjectUpdate();
 }
 
