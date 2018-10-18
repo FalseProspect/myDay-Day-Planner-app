@@ -322,7 +322,7 @@ ul.todoList::before{
   background-size: auto;
 }
 
- ul.todoList li:nth-child(1):before{
+ ul.todoList li:nth-child(1)::before{
   width: 100px;
   height: 20px;
   display: block;
