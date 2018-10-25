@@ -48,11 +48,11 @@ const theme = function(themeName,mainColor){
 const themes = [
   new theme('Ocean','RGBA(69,74,222,1)'),     // #454ADE RGBA(69,74,222,1)
   new theme('Pumpkin','RGBA(255,78,0,1)'),    // #FF4E00 RGBA(255,78,0,1)
-  new theme('Rum','RGBA(80,31,50,1)'),        // #501F32 RGBA(80,31,50,1)
+  new theme('Rum','RGBA(99,21,51,1)'),        // #631533 RGBA(99,21,51,1)
   new theme('Honey','RGBA(243,167,18,1)'),    // #F3A712 RGBA(243,167,18,1)
   new theme('Salmon','RGBA(255,113,91,1)'),
   new theme('Skyblue', 'skyblue'),
-  new theme('Royal','RGBA(70,35,122,1)'),     // #46237a RGBA(70,35,122,1)
+  new theme('Royal','RGBA(90,45,158,1)'),     // #5A2D9E RGBA(90,45,158,1)
   new theme('Mint','RGBA(37,185,154,1)')];    // #25B99A RGBA(37,185,154,1)
 
 //List Item Class
@@ -292,8 +292,18 @@ document.getElementById('add').addEventListener('click', function(){
 //'Enter' press = submit
 document.getElementById('item').addEventListener('keydown',function (e) {
   let value = document.getElementById('item').value;
-  if (e.key === "Enter" && value) {submitItem(value)}
-  })
+  if (e.key === "Enter" && value) {return submitItem(value)};
+  if (document.activeElement === document.getElementById('item')){
+    switch(e.key){
+      case "ArrowUp":
+        cycleInputHistory('UP');
+        break;
+      case "ArrowDown":
+        cycleInputHistory('DOWN');
+      break;
+    }
+  
+  }})
 
 //Toggle CommandMode
 function toggleCommandMode(status) {
@@ -302,8 +312,30 @@ function toggleCommandMode(status) {
   document.getElementById('item').value = '';
 }
 
+//Store input history to be recalled again (Like command prompt)
+let inputHistory = [];
+let inputHistoryIndex = -1;
+
+function cycleInputHistory(direction){
+  switch(direction){
+    case "UP":
+      if(!inputHistory[inputHistoryIndex + 1]){return};
+      inputHistoryIndex ++;
+      break;
+    case "DOWN":
+      if(!inputHistory[inputHistoryIndex - 1] && inputHistoryIndex - 1 !== -1){return};
+      inputHistoryIndex --;
+      break;
+  }
+  if(inputHistory[inputHistoryIndex] === undefined){return document.getElementById('item').value = ''};
+  document.getElementById('item').value = inputHistory[inputHistoryIndex];
+}
+
 //Submit item
 function submitItem(value,override){
+  //Push submit to history
+  inputHistory.push(value);
+  inputHistoryIndex = -1;
   //Command Mode Check
   switch(value){
     case "```":
@@ -389,6 +421,8 @@ function unRenderList(){
 //Save Local Storage
 function dataObjectUpdate(){
   localStorage.setItem('todoList', JSON.stringify(data));
+  let cols = document.querySelectorAll('ul.todoList li');
+[].forEach.call(cols, addDnDHandlers);
   console.log(data);
 };
 
@@ -430,19 +464,24 @@ function addItemTodo(obj, completed){
     case 'uncomplete':
     itemIndex = data.todo.indexOf(obj.task);
     item.setAttribute('data-date', obj.creationDate);
+    item.setAttribute('data-dateID', obj.uID);
     item.setAttribute('title',`Made: ${obj.creationDate}`);
       break;
     case 'complete':
     itemIndex = data.completed.indexOf(obj.task);
     item.setAttribute('data-date', obj.completionDate);
+    item.setAttribute('data-dateID', obj.uID);
     item.setAttribute('title',`Made: ${obj.creationDate}\nDone: ${obj.completionDate}`);
       break;
     case 'deleted':
     itemIndex = data.deleted.indexOf(obj.task);
     item.setAttribute('data-date', obj.deletionDate);
+    item.setAttribute('data-dateID', obj.uID);
     item.setAttribute('title',`Deleted: ${obj.deletionDate}`);
       break;
   }
+
+  item.setAttribute('draggable', 'true');
 
   //Decide which list to add to
   let list;
@@ -457,6 +496,12 @@ function addItemTodo(obj, completed){
     newList.id = listValue;
     container.insertBefore(newList, container.childNodes[0]);
     console.log(newList.id);
+    //make list header with date
+    let listHeader = document.createElement('p');
+    listHeader.setAttribute('data-date',newList.id);
+    listHeader.setAttribute('class','listHeader');
+    listHeader.innerText = newList.id;
+    newList.appendChild(listHeader);
   }
 
   //Insert to list
@@ -560,7 +605,7 @@ function removeItem(){
   //Remove item from the list it's in
   parentList.removeChild(deletingItem);
   //If item was the last in its list, delete the list
-  if(!parentList.childNodes[0]){
+  if(!parentList.childNodes[1]){                              //Index 1 because list header will always be at index 0
     parentList.parentNode.removeChild(parentList);
     dataObjectUpdate();
     return;
@@ -568,3 +613,129 @@ function removeItem(){
   dataObjectUpdate();
 }
 
+
+//Dragging List Reorder
+
+let dragSrcEl = null;
+let draggingIndex = undefined;
+let dropIndex = undefined;
+function handleDragStart(e) {
+  dragSrcEl = this;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.outerHTML);
+
+  switch(this.getAttribute("class")){
+    case 'uncomplete':
+      draggingIndex = data.todo.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+      break;
+    case 'complete':
+      draggingIndex = data.completed.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+      break;
+    case 'deleted':
+      draggingIndex = data.deleted.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+      break;
+  };
+  console.log(`Dragging Index: ${draggingIndex}`);
+  this.classList.add('dragElem');
+}
+function handleDragOver(e) {
+  if (e.preventDefault) {
+    e.preventDefault(); // Necessary. Allows us to drop.
+  }
+  this.classList.add('over');
+  e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+  return false;
+}
+
+function handleDragEnter(e) {
+  // this / e.target is the current hover target.
+}
+
+function handleDragLeave(e) {
+  this.classList.remove('over');  // this / e.target is previous target element.
+}
+
+function handleDrop(e) {
+  if (e.stopPropagation) {
+    e.stopPropagation(); // Stops some browsers from redirecting.
+  }
+
+  // Don't do anything if dropping the same column we're dragging.
+  if (dragSrcEl != this) {
+    let itemClass = this.getAttribute("class").split(' ')[0];
+
+    switch(itemClass){
+      case 'uncomplete':
+        dropIndex = data.todo.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+        break;
+      case 'complete':
+        dropIndex = data.completed.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+        break;
+      case 'deleted':
+        dropIndex = data.deleted.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+        break;
+    };
+    console.log(`Dropping in to index pos: ${dropIndex - 1}`);
+    reorderList(draggingIndex,dropIndex, itemClass);
+    this.parentNode.removeChild(dragSrcEl);
+    var dropHTML = e.dataTransfer.getData('text/html');
+    this.insertAdjacentHTML('beforebegin',dropHTML);
+    var dropElem = this.previousSibling;
+    addDnDHandlers(dropElem);
+  }
+  this.classList.remove('over');
+  return false;
+}
+
+function reorderList(pos1,pos2,listClass){
+  let index1 = pos1;
+  let index2 = pos2 - 1;
+  let list = listClass;
+  let data1;
+  let data2;
+  switch(list){
+    case 'uncomplete':
+      data1 = data.todo[index1];
+      data2 = data.todo[index2];
+      console.log(`Data 1: ${data1}`);      
+      console.log(`Data 2: ${data2}`);
+      data.todo[index2] = data1;
+      data.todo[index1] = data2;
+      break;
+    case 'complete':
+      data1 = data.todo[index1];
+      data2 = data.todo[index2];
+      data.completed[index2] = data1;
+      data.completed[index1] = data2;
+      break;
+    case 'deleted':
+      data1 = data.todo[index1];
+      data2 = data.todo[index2];
+      data.deleted[index2] = data1;
+      data.deleted[index1] = data2;
+      break;
+  };
+  dataObjectUpdate();
+}
+
+function handleDragEnd(e) {
+  // this/e.target is the source node.
+  this.classList.remove('over');
+
+  /*[].forEach.call(cols, function (col) {
+    col.classList.remove('over');
+  });*/
+}
+
+function addDnDHandlers(elem) {
+  elem.addEventListener('dragstart', handleDragStart, false);
+  elem.addEventListener('dragenter', handleDragEnter, false)
+  elem.addEventListener('dragover', handleDragOver, false);
+  elem.addEventListener('dragleave', handleDragLeave, false);
+  elem.addEventListener('drop', handleDrop, false);
+  elem.addEventListener('dragend', handleDragEnd, false);
+
+}
+
+let cols = document.querySelectorAll('ul.todoList li');
+[].forEach.call(cols, addDnDHandlers);

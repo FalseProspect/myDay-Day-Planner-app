@@ -18,6 +18,17 @@
   --itemCompleteColor: rgba(255,255,255,.25); /* Light: RGBA(255,255,255,.25) | Dark:RGBA(68,68,68,.3) */
 }
 
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+
+
 body{
   background: var(--backColor);
   padding: 80px 0 0 0;
@@ -153,7 +164,7 @@ header button#logo svg .fill{
   margin-left: 0px;
   width: 100%;
   float: left;
-  padding: 15px;
+  padding: 0 15px 15px 15px;
   transition: all .5s ease;
 }
 
@@ -306,7 +317,7 @@ ul.todoList{
 
 ul.todoList:nth-child(1){
   position: relative;
-  padding: 0 0 0 0;
+  
 }
 
 ul.todoList::before{
@@ -339,6 +350,21 @@ ul.todoList::before{
   left: calc(50% - 50px);
 } 
 
+.listHeader{
+  width: 100px;
+  height: 20px;
+  display: block;
+  position: absolute;
+  text-align: center;
+  font-size: 14px;
+  color: var(--containerTextColor);
+  margin: 0 auto;
+  padding: 0 5px 0 5px;
+  background: var(--backColor);
+  z-index: 5;
+  top: 5px;
+  left: calc(50% - 50px);
+} 
 
 .menu{
   position: fixed;
@@ -440,7 +466,60 @@ ul.todoList li.deleted .buttons button.remove{
   margin-left: 25%;
 }
 
+ul.todoList li.over {
+  border-top: 4px solid var(--mainAccent);
+}
+
 #user{
   position: absolute;
   visibility: hidden;
+}
+
+@media screen and (max-width: 800px){
+  body{
+    padding: 60px 0 0 0;
+  }
+  header{
+    height: 60px;
+    padding: 8px;
+  }
+  header input{
+    height: 40px;
+    padding: 0 20px 0 0;
+  }
+  header button{
+    width: 40px;
+    height: 40px;
+    top: 7.5px;
+    right: 7.5px;
+  }
+  header button#Menu{
+    top: 5px;
+  }
+  header button#logo{
+    top: 5px;
+  }
+  .menu a{
+    width: 170px;
+    height: 3.5em;
+    padding: 1.2em 0 0 0;
+  }
+  .menu a svg{
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 43%;
+    left: 10%;
+    margin: -8px 0 0 -8px;
+  }
+  .menu a#profile{
+    padding: 1em 0 0 0;
+  }
+  .menu a#profile::after{
+    position:absolute;
+    left: 37%;
+    font-size: .8rem;
+    bottom: .55em;
+    content: attr(data-profile);
+  }
 }
