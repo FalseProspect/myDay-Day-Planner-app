@@ -9,7 +9,7 @@ router.get('/login',(req,res)=>{
 //Auth Logout
 router.get('/logout',(req,res)=>{
     //Passport handle
-    req.logout();
+    req.session = null;
     res.redirect('/');
 });
 
