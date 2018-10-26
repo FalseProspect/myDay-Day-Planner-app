@@ -71,11 +71,13 @@ header input{
   box-shadow: none;
   outline: none;
   appearance: none;
+  transition: margin-left .5s, width .5s ease;
 }
 
 header input::placeholder{
   color: rgba(255,255,255,0.9);
 }
+
 
 header button svg .fill{
   fill: var(--mainAccent);
@@ -109,7 +111,7 @@ header button#Menu{
   width: 50px;
   height: 50px;
   position: absolute;
-  top: 15px;
+  top: 13px;
   left: 10px;
   z-index: 3;
   border-radius: 25px;
@@ -138,7 +140,7 @@ header button#logo{
   height: 50px;
   position: absolute;
   top: 16px;
-  left: 63px;
+  left: 60px;
   z-index: 4;
   background:none;
   border: 0px;
@@ -154,10 +156,25 @@ header button#logo svg {
   top: 0;
   left: 0;
   margin: 0 0 0 0;
+  transition: width .5s ease;
 }
 
 header button#logo svg .fill{
   fill: var(--buttonColor);
+}
+
+.clientStatus{
+  width: 25%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#clientStatus{
+  color: var(--inputTextColor);
+  box-shadow: 0px 2px 4px rgba(44, 62, 80, 0.15);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  transition: all .5s ease;
 }
 
 .container{
@@ -368,7 +385,7 @@ ul.todoList::before{
 
 .menu{
   position: fixed;
-  width: 200px;
+  width: 170px;
   background: var(--backColor);
   height: 100%; 
   transform: translateX(-200px);
@@ -435,6 +452,10 @@ ul.todoList::before{
   margin-left: 38px;
 }
 
+svg#nightIcon{
+  left: 10%;
+}
+
 .menu a div#doneLabel{
   margin-left: 22px;
 }
@@ -447,7 +468,7 @@ ul.todoList::before{
 
 .menu a#profile::after{
   position:absolute;
-  left: 78px;
+  left: 37%;
   font-size: .8rem;
   bottom: .5rem;
   content: attr(data-profile);
@@ -485,7 +506,7 @@ ul.todoList li.over {
   }
   header input{
     height: 40px;
-    padding: 0 20px 0 0;
+    padding: 0 50px 0 0;
   }
   header button{
     width: 40px;
@@ -494,11 +515,12 @@ ul.todoList li.over {
     right: 7.5px;
   }
   header button#Menu{
-    top: 5px;
+    top: 2px;
   }
   header button#logo{
     top: 5px;
   }
+
   .menu a{
     width: 170px;
     height: 3.5em;

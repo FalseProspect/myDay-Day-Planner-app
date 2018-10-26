@@ -41,6 +41,9 @@ const viewings = {
 //Initiate starting View
 let view = viewings.TASKS;
 
+//Active Elements
+let isInputActive;
+
 //Themes
 const theme = function(themeName,mainColor){
   this.name = themeName;
@@ -138,9 +141,13 @@ function sumbitCommand(value){
   if(profileTab.innerText !== "Sign-In"){
     profileTab.setAttribute('data-profile',' ');
     profileTab.setAttribute('href','/auth/logout');
+    document.getElementById('clientStatus').style.background = 'var(--mainAccent)';
+    document.getElementById('clientStatus').innerText = 'Online';
   }else{
   profileTab.setAttribute('data-profile','(Offline)');
   profileTab.setAttribute('href','/auth/google');
+    document.getElementById('clientStatus').style.background = '#444';
+    document.getElementById('clientStatus').innerText = 'Offline';
   }
   //If user is signed in, fetch their tasks
   if(userClient){
@@ -226,11 +233,18 @@ document.getElementById('Menu').addEventListener('click', ()=>{
 })
 
 function menuClickEvent(value){
-  document.getElementById('itemBin').style.marginLeft = menuOpen === true ? '200px': '0';
-  document.getElementById('sideMenu').style.transform = menuOpen === true ? 'translateX(0px)': 'translateX(-200px)';
-  document.getElementById('itemBin').style.width = menuOpen === true ? 'calc(100% - 200px)': '100%';
+  document.getElementById('itemBin').style.marginLeft = menuOpen ? '0' : '160px';
+  document.getElementById('sideMenu').style.transform = menuOpen ? 'translateX(-200px)' : 'translateX(0px)';
+  document.getElementById('itemBin').style.width = menuOpen ? '100%' : 'calc(100% - 160px)';
+  document.getElementById('clientStatus').style.marginLeft = menuOpen ? '0' : '160px';
   localStorage.setItem('menuOpen', JSON.stringify(value));
 }
+
+(function clientStatus(){
+  console.log(userClient ? "Online":"Offline");
+  document.getElementById('clientStatus').style.background = userClient ? '--mainAccent': '#444';
+
+})()
 
 //Theme change click event
 document.getElementById('theme').addEventListener('click', function(){
@@ -288,11 +302,29 @@ document.getElementById('add').addEventListener('click', function(){
   if(value){submitItem(value)}
 })
 
+//Header Logo and input bar transitions
+function headerStyling(){
+  document.getElementById('item').style.marginLeft = (isInputActive) ? '55px': '200px';
+  document.getElementById('item').style.width = (isInputActive) ? 'calc(100% - 55px)': 'calc(100% - 200px)';
+  document.getElementById('logo').style.width = (isInputActive) ? '0px': '140px';  
+  document.getElementById('logoSvg').style.width = (isInputActive) ? '0px': '140px';    
+}
+
+//Track click focus changes
+document.body.addEventListener('click',()=>{
+  if(document.activeElement !== document.getElementById('item')){
+    isInputActive = false;
+    headerStyling();
+    console.log('Input bar in not active')}
+})
+
 //'Enter' press = submit
 document.getElementById('item').addEventListener('keydown',function (e) {
   let value = document.getElementById('item').value;
+  isInputActive = (document.activeElement === this && value.length > -1)
+  headerStyling();
   if (e.key === "Enter" && value) {return submitItem(value)};
-  if (document.activeElement === document.getElementById('item')){
+  if (document.activeElement === this){
     switch(e.key){
       case "ArrowUp":
         cycleInputHistory('UP');
@@ -613,7 +645,7 @@ function removeItem(){
 }
 
 
-//Dragging List Reorder
+/////// LIST ITEM REORDERING \\\\\\\
 
 let dragSrcEl = null;
 let draggingIndex = undefined;
@@ -642,27 +674,20 @@ function handleDragOver(e) {
     e.preventDefault(); // Necessary. Allows us to drop.
   }
   this.classList.add('over');
-  e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+  e.dataTransfer.dropEffect = 'move';                           // See the section on the DataTransfer object.
   return false;
 }
 
-function handleDragEnter(e) {
-  // this / e.target is the current hover target.
-}
+function handleDragEnter(e) {}                                  // this / e.target is the current hover target.
 
-function handleDragLeave(e) {
-  this.classList.remove('over');  // this / e.target is previous target element.
-}
+function handleDragLeave(e) {this.classList.remove('over')}     // this / e.target is previous target element.
 
 function handleDrop(e) {
-  if (e.stopPropagation) {
-    e.stopPropagation(); // Stops some browsers from redirecting.
-  }
-
+  if (e.stopPropagation) {e.stopPropagation()}                  // Stops some browsers from redirecting.
+  
   // Don't do anything if dropping the same column we're dragging.
   if (dragSrcEl != this) {
     let itemClass = this.getAttribute("class").split(' ')[0];
-
     switch(itemClass){
       case 'uncomplete':
         dropIndex = data.todo.findIndex((item => item.uID === this.getAttribute('data-dateid')));
@@ -720,10 +745,6 @@ function reorderList(pos1,pos2,listClass){
 function handleDragEnd(e) {
   // this/e.target is the source node.
   this.classList.remove('over');
-
-  /*[].forEach.call(cols, function (col) {
-    col.classList.remove('over');
-  });*/
 }
 
 function addDnDHandlers(elem) {
@@ -733,7 +754,6 @@ function addDnDHandlers(elem) {
   elem.addEventListener('dragleave', handleDragLeave, false);
   elem.addEventListener('drop', handleDrop, false);
   elem.addEventListener('dragend', handleDragEnd, false);
-
 }
 
 let cols = document.querySelectorAll('ul.todoList li');
