@@ -50,13 +50,13 @@ const theme = function(themeName,mainColor){
   this.mainColor = mainColor;
 };
 const themes = [
-  new theme('Ocean','RGBA(69,74,222,1)'),     // #454ADE RGBA(69,74,222,1)
+  new theme('Ocean','RGBA(79,84,255,1)'),     // #4F54FF RGBA(79,84,255,1)
   new theme('Pumpkin','RGBA(255,78,0,1)'),    // #FF4E00 RGBA(255,78,0,1)
   new theme('Rum','RGBA(99,21,51,1)'),        // #631533 RGBA(99,21,51,1)
   new theme('Honey','RGBA(243,167,18,1)'),    // #F3A712 RGBA(243,167,18,1)
   new theme('Salmon','RGBA(255,113,91,1)'),
   new theme('Skyblue', 'skyblue'),
-  new theme('Royal','RGBA(90,45,158,1)'),     // #5A2D9E RGBA(90,45,158,1)
+  new theme('Royal','RGBA(66,2,111,1)'),     // #42026F RGBA(90,45,158,1)
   new theme('Mint','RGBA(37,185,154,1)')];    // #25B99A RGBA(37,185,154,1)
 
 //List Item Class
@@ -94,7 +94,8 @@ function sumbitCommand(value){
   //console.log(aurgument);
   switch(command[0]){
     case 'theme':
-      themeSwitch(aurgument);
+    document.getElementById('themeLabel').innerHTML = "Custom";
+    document.documentElement.style.setProperty('--mainAccent', aurgument);
       break;
     case 'cmd':
       toggleCommandMode(JSON.parse(aurgument));
@@ -132,20 +133,20 @@ function sumbitCommand(value){
   }
 }
 
-/////// CHECK USER SIGN IN \\\\\\\\
+/////// HTML REQUEST \\\\\\\\
 
 //Set values if a user is signed in
 (function profileTabUsername(){
   //Setup user's Profile Tab
-  let profileTab = document.getElementById('profile');
+  let profileTab = document.getElementById('profileLabel');
   if(profileTab.innerText !== "Sign-In"){
     profileTab.setAttribute('data-profile',' ');
-    profileTab.setAttribute('href','/auth/logout');
+    profileTab.parentNode.setAttribute('href','/auth/logout');
     document.getElementById('clientStatus').style.background = 'var(--mainAccent)';
     document.getElementById('clientStatus').innerText = 'Online';
   }else{
-  profileTab.setAttribute('data-profile','(Offline)');
-  profileTab.setAttribute('href','/auth/google');
+    profileTab.setAttribute('data-profile','(Offline)');
+    profileTab.parentNode.setAttribute('href','/auth/google');
     document.getElementById('clientStatus').style.background = '#444';
     document.getElementById('clientStatus').innerText = 'Offline';
   }
@@ -157,8 +158,7 @@ function sumbitCommand(value){
   };
 })();
 
-/////// FETCHED JSON PRINTING \\\\\\\\
-
+//FETCHED JSON PRINTING
 function extractJSON(dataArr){
   let arr = dataArr;
   for (let i in arr){
@@ -176,8 +176,7 @@ function extractJSON(dataArr){
   }
 }
 
-/////// POST REQUEST \\\\\\\\
-
+//POST REQUEST
 function post(obj,index) {
   if(!userClient){return};                                                                    //Returns if user is not signed in
   let form = document.createElement("form");                                                  //Temp form is made
@@ -204,8 +203,7 @@ function post(obj,index) {
   document.body.removeChild(form);                                                            //Removes the temp form from html
 }
 
-/////// UPDATE REQUEST \\\\\\\\
-
+//UPDATE REQUEST
 function update(oldObj,newObj){                                                               //Receives the Old Model and New Model
   if(!userClient){return};
   let oldItem = JSON.stringify(oldObj);                                                       //Stringify Old Model
@@ -215,8 +213,7 @@ function update(oldObj,newObj){                                                 
   xhr.send(sendItem);                                                                         //Send to Node
 }
 
-/////// REMOVE REQUEST \\\\\\\\
-
+//REMOVE REQUEST
 function remove(obj){
   if(!userClient){return};
   let removeItem = JSON.stringify(obj);                                                       //Stringify Target Model
@@ -224,7 +221,7 @@ function remove(obj){
   xhr.send(removeItem);                                                                       //Send to Node
 }
 
-/////// USER INTERFACE FUNCTIONS \\\\\\\\
+/////// USER INTERFACE FUNCTIONS \\\\\\\\---------------------------------------------------------------------------------------------
 
 //Menu Event Listener
 document.getElementById('Menu').addEventListener('click', ()=>{
@@ -236,15 +233,9 @@ function menuClickEvent(value){
   document.getElementById('itemBin').style.marginLeft = menuOpen ? '0' : '160px';
   document.getElementById('sideMenu').style.transform = menuOpen ? 'translateX(-200px)' : 'translateX(0px)';
   document.getElementById('itemBin').style.width = menuOpen ? '100%' : 'calc(100% - 160px)';
-  document.getElementById('clientStatus').style.marginLeft = menuOpen ? '0' : '160px';
+  document.getElementById('clientStatus').style.marginLeft = menuOpen ? '0' : '80px';
   localStorage.setItem('menuOpen', JSON.stringify(value));
 }
-
-(function clientStatus(){
-  console.log(userClient ? "Online":"Offline");
-  document.getElementById('clientStatus').style.background = userClient ? '--mainAccent': '#444';
-
-})()
 
 //Theme change click event
 document.getElementById('theme').addEventListener('click', function(){
@@ -255,7 +246,7 @@ document.getElementById('theme').addEventListener('click', function(){
 //Theme Switcher
 function themeSwitch(index){
   let theme = themes[index];
-  document.getElementById('themeLabel').innerHTML =`Theme: ${theme.name}`;
+  document.getElementById('themeLabel').innerHTML = theme.name;
   document.documentElement.style.setProperty('--mainAccent', theme.mainColor);
   localStorage.setItem('themeIndex', JSON.stringify(index));
 }
@@ -274,7 +265,7 @@ function setNightMode(value){
   document.documentElement.style.setProperty('--menuHoverColor', value ? '#444' : '#aaa');
   document.documentElement.style.setProperty('--itemTextColor', value ? '#ddd' : '#444');
   document.documentElement.style.setProperty('--itemCompleteColor', value ? 'rgba(68,68,68,.3)' : 'rgba(255,255,255,.25)');
-  document.getElementById('nightLabel').innerHTML =`Night Mode: ${nightMode ? 'ON' : 'OFF'}`;
+  document.getElementById('nightLabel').innerHTML =`Night: ${nightMode ? 'ON' : 'OFF'}`;
   localStorage.setItem('nightMode', JSON.stringify(value));
 }
 
@@ -298,7 +289,7 @@ document.getElementById('item').focus();
 
 //Add button pressed
 document.getElementById('add').addEventListener('click', function(){
-  let value = document.getElementById('item').value;
+  let value = document.getElementById('item').value.trim();
   if(value){submitItem(value)}
 })
 
@@ -314,13 +305,12 @@ function headerStyling(){
 document.body.addEventListener('click',()=>{
   if(document.activeElement !== document.getElementById('item')){
     isInputActive = false;
-    headerStyling();
-    console.log('Input bar in not active')}
+    headerStyling();}
 })
 
 //'Enter' press = submit
 document.getElementById('item').addEventListener('keydown',function (e) {
-  let value = document.getElementById('item').value;
+  let value = document.getElementById('item').value.trim();
   isInputActive = (document.activeElement === this && value.length > -1)
   headerStyling();
   if (e.key === "Enter" && value) {return submitItem(value)};
@@ -338,7 +328,7 @@ document.getElementById('item').addEventListener('keydown',function (e) {
 
 //Toggle CommandMode
 function toggleCommandMode(status) {
-  status ? document.getElementById('themeLabel').innerHTML = `Theme: ${'cmd'}` : themeSwitch(themeIndex);
+  status ? document.getElementById('themeLabel').innerHTML = `Void` : themeSwitch(themeIndex);
   status ? document.documentElement.style.setProperty('--mainAccent', '#000') : themeSwitch(themeIndex);
   document.getElementById('item').value = '';
 }
@@ -349,11 +339,11 @@ let inputHistoryIndex = -1;
 
 function cycleInputHistory(direction){
   switch(direction){
-    case "UP":
+    case "DOWN":
       if(!inputHistory[inputHistoryIndex + 1]){return};
       inputHistoryIndex ++;
       break;
-    case "DOWN":
+    case "UP":
       if(!inputHistory[inputHistoryIndex - 1] && inputHistoryIndex - 1 !== -1){return};
       inputHistoryIndex --;
       break;
@@ -365,8 +355,9 @@ function cycleInputHistory(direction){
 //Submit item
 function submitItem(value,override){
   //Push submit to history
+  if(!value){document.getElementById('item').value = ''; return};
   inputHistory.push(value);
-  inputHistoryIndex = -1;
+  inputHistoryIndex = inputHistory.length;
   //Command Mode Check
   switch(value){
     case "```":
@@ -383,7 +374,7 @@ function submitItem(value,override){
         };
         listItem(newItem);                                                //Mixin Object
         data.todo.push(newItem);                                          //Push to Data
-        addItemTodo(newItem);                                             //Render Item
+        addItemTodo(newItem,false);                                             //Render Item
         post(newItem,data.todo.findIndex((item => item === newItem)));    //POST (If signed-in)
         document.getElementById('item').value = '';                       //Clear Input Bar
         dataObjectUpdate();                                               //Save Data Array
@@ -391,13 +382,13 @@ function submitItem(value,override){
   }
 };
 
-/////// RENDERING FUNCTIONS \\\\\\\
+/////// RENDERING FUNCTIONS \\\\\\\---------------------------------------------------------------------------------------------
 
 //List Renderer
 function renderList(renderView){
   unRenderList(); //Unrender anything present if present
   view = renderView;
-  console.log(`Currently viewing: ${view}`);
+  //console.log(`Currently viewing: ${view}`);
   switch (renderView){
     case viewings.TASKS:
     //Render uncomplete task
@@ -443,27 +434,41 @@ function unRenderList(){
   for (let i = 0; i < list.length; i++){
   list[i].parentNode.removeChild(list[i]);
   }}
-
-  console.log('Unrender done');
 };
 
-/////// LOCAL STORAGE SAVING \\\\\\\
+/////// LOCAL STORAGE SAVING \\\\\\\---------------------------------------------------------------------------------------------
 
 //Save Local Storage
 function dataObjectUpdate(){
+  if(userClient)return;
   localStorage.setItem('todoList', JSON.stringify(data));
-  let cols = document.querySelectorAll('ul.todoList li');
-[].forEach.call(cols, addDnDHandlers);
-  console.log(data);
+//   let cols = document.querySelectorAll('ul.todoList li');
+// [].forEach.call(cols, addDnDHandlers);
+//console.log(data);
 };
 
-/////// ITEM MANIPULATION FUNCTIONS \\\\\\\
+/////// ITEM MANIPULATION FUNCTIONS \\\\\\\---------------------------------------------------------------------------------------------
 
 //ADD item
 function addItemTodo(obj, completed){
-  //Create list elem and add text
+  //Check for taggin symbols
+  let task = obj.task;
+  let tagSymbs = /([#@])\w+/g;
+  if (tagSymbs.test(task)){
+      task = task.split(' ');
+      let newTask = [];
+      newTask.push(task.map(word=>{if(tagSymbs.test(word)){
+        word = `<span class="tagged">${word}</span>`;
+        return word
+      };
+      return word;
+    }));
+    task = newTask[0].join(' ');
+  }
+
+  //Create item elem and add text
   let item = document.createElement('li');
-  item.innerText = obj.task;
+  item.innerHTML += task;
   //Create button elements
   let buttons = document.createElement('div');
   buttons.classList.add ('buttons');
@@ -483,13 +488,11 @@ function addItemTodo(obj, completed){
   buttons.appendChild(complete);
   item.appendChild(buttons);
   
-  
   //Assign className to item
   if (view !== viewings.DELETED){completed ? item.className = "complete" : item.className = "uncomplete";}
   else {item.className = "deleted";}
   
   //Assign Object and DOM manipulations
-  
   let itemIndex;
   switch (item.className){
     case 'uncomplete':
@@ -511,22 +514,19 @@ function addItemTodo(obj, completed){
     item.setAttribute('title',`Deleted: ${obj.deletionDate}`);
       break;
   }
-
-  item.setAttribute('draggable', 'true');
+  //item.setAttribute('draggable', 'true');
 
   //Decide which list to add to
-  let list;
-
   if (!document.getElementById(item.getAttribute('data-date'))) newList(item.getAttribute('data-date'));
-  list = document.getElementById(item.getAttribute('data-date'));
+  let list = document.getElementById(item.getAttribute('data-date'));
 
+  //Insert to list
   function newList(listValue){
     let container = document.getElementById('itemBin');
     let newList = document.createElement('ul');
     newList.className = 'todoList'
     newList.id = listValue;
     container.insertBefore(newList, container.childNodes[0]);
-    console.log(newList.id);
     //make list header with date
     let listHeader = document.createElement('p');
     listHeader.setAttribute('data-date',newList.id);
@@ -536,7 +536,17 @@ function addItemTodo(obj, completed){
   }
 
   //Insert to list
-  list.insertBefore(item, list.childNodes[complete ? document.getElementsByClassName("uncomplete").length : 0]);
+  let insert = list.childElementCount;
+  let dist = 0;
+  if(completed){
+      list.insertBefore(item, list.childNodes[list.childElementCount]);
+  } else{
+      for (let i in list.childNodes){
+        if(list.childNodes[i].className === 'uncomplete'){dist ++};
+      }
+      console.log(insert);
+      list.insertBefore(item, list.childNodes[dist]);
+  }
 }
 
 //COMPLETE Item
@@ -547,7 +557,7 @@ function completeItem(){
   let itemValue = completedItem.innerText;
   let itemIndex;
   let itemPush;
-  
+
   switch (itemClass){
     //Change item for 'uncomplete' to 'complete'
     case 'uncomplete':            
@@ -565,7 +575,7 @@ function completeItem(){
       //Rendering and DOM manipulation
       completedItem.className = "complete";
       listParent.removeChild(completedItem);
-      listParent.insertBefore(completedItem, listParent.childNodes[document.getElementsByClassName("uncomplete").length]); //Insert under last uncomplete object
+      listParent.insertBefore(completedItem, listParent.childNodes[listParent.childElementCount]); //Insert under last uncomplete object
       break;
     //Change item from "complete" to "uncomplete"
     case 'complete':              
@@ -669,6 +679,8 @@ function handleDragStart(e) {
   console.log(`Dragging Index: ${draggingIndex}`);
   this.classList.add('dragElem');
 }
+
+
 function handleDragOver(e) {
   if (e.preventDefault) {
     e.preventDefault(); // Necessary. Allows us to drop.
@@ -748,6 +760,7 @@ function handleDragEnd(e) {
 }
 
 function addDnDHandlers(elem) {
+  return;
   elem.addEventListener('dragstart', handleDragStart, false);
   elem.addEventListener('dragenter', handleDragEnter, false)
   elem.addEventListener('dragover', handleDragOver, false);
@@ -756,5 +769,5 @@ function addDnDHandlers(elem) {
   elem.addEventListener('dragend', handleDragEnd, false);
 }
 
-let cols = document.querySelectorAll('ul.todoList li');
-[].forEach.call(cols, addDnDHandlers);
+//let cols = document.querySelectorAll('ul.todoList li');
+//[].forEach.call(cols, addDnDHandlers);

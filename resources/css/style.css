@@ -163,19 +163,7 @@ header button#logo svg .fill{
   fill: var(--buttonColor);
 }
 
-.clientStatus{
-  width: 25%;
-  margin: 0 auto;
-  text-align: center;
-}
 
-#clientStatus{
-  color: var(--inputTextColor);
-  box-shadow: 0px 2px 4px rgba(44, 62, 80, 0.15);
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  transition: all .5s ease;
-}
 
 .container{
   margin-left: 0px;
@@ -194,7 +182,7 @@ div#itemBin.container::before{
 }
 div#itemBin.container:empty::before{
   content: "JUST DO IT"; /*Add a quote generator*/
-  margin: 15px 0 0 0;
+  margin: 50px 0 0 0;
 }
 
 ul.todoList{
@@ -268,13 +256,13 @@ ul.todoList li .buttons button{
   cursor: pointer;
 }
 
-ul.todoList li .buttons button:last-of-type:before{
+ul.todoList li::after{
   content: '';
   width: 2px;
-  height: 30px;
+  height: calc(60%);
   position: absolute;
-  top:10px;
-  left: 0px;
+  top: 20%;
+  right: 48px;
   background: var(--backColor);
 }
 
@@ -329,12 +317,7 @@ ul.todoList li .buttons button.complete svg .fill{
 ul.todoList{
   position: relative;
   padding: 20px 0 0 0;
-  margin: 15px 0 0 0;
-}
-
-ul.todoList:nth-child(1){
-  position: relative;
-  
+  margin: 18px 0 0 0;
 }
 
 ul.todoList::before{
@@ -346,7 +329,7 @@ ul.todoList::before{
   margin: 0 auto 23px auto;
   background: var(--mainAccent);
   top: -4px;
-  z-index: 4;
+  z-index: 3;
   background-size: auto;
 }
 
@@ -367,6 +350,7 @@ ul.todoList::before{
   left: calc(50% - 50px);
 } 
 
+
 .listHeader{
   width: 100px;
   height: 20px;
@@ -378,13 +362,35 @@ ul.todoList::before{
   margin: 0 auto;
   padding: 0 5px 0 5px;
   background: var(--backColor);
-  z-index: 5;
+  z-index: 3;
   top: 5px;
   left: calc(50% - 50px);
 } 
 
+.clientStatus{
+  width: 100px;
+
+}
+
+#clientStatus{
+  min-width: 100px;
+  background: var(--mainAccent);
+  color: var(--inputTextColor);
+  box-shadow: 0px 2px 4px rgba(44, 62, 80, 0.15);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: block;
+  position: absolute;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 4;
+  left: calc(50% - 50px);
+  transition: all .2s,margin .5s ease;
+}
+
 .menu{
   position: fixed;
+  border-right: thin solid var(--itemColor);
   width: 170px;
   background: var(--backColor);
   height: 100%; 
@@ -396,11 +402,10 @@ ul.todoList::before{
   display: block;
   position: relative;
   width: 100%;
-  height: 4em;
-  padding: 1.5em 0 0 0;
+  height: 3em;
+  padding: 1em 0 1em 0;
   margin: 1em 0 1em 0;
   text-decoration: none;
-  text-align: center;
   background: var(--backColor);
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -426,7 +431,7 @@ ul.todoList::before{
   width: 30px;
   height: 30px;
   position: absolute;
-  top: 43%;
+  top: 40%;
   left: 15%;
   margin: -8px 0 0 -8px;
   fill: var(--containerTextColor);
@@ -435,6 +440,10 @@ ul.todoList::before{
 .menu a svg#doneIcon{
   border-radius: 15px;
   border: 1.5px solid var(--containerTextColor);
+}
+
+.menu a svg#nightIcon{
+  top: 35%;
 }
 
 .menu a:hover svg,
@@ -447,30 +456,38 @@ ul.todoList::before{
   border: 1.5px solid var(--inputTextColor);
 }
 
-.menu a div#themeLabel,
-.menu a div#nightLabel{
-  margin-left: 38px;
+.menu a div{
+  margin-top: -1px;
+  margin-left: 55px; 
 }
 
-svg#nightIcon{
-  left: 10%;
+.menu a div#themeLabel::before{
+  position: absolute;
+  text-align: center;
+  top: 7%;
+  content: 'Theme:';
 }
 
-.menu a div#doneLabel{
-  margin-left: 22px;
+.menu a div#themeLabel{
+  padding-top: 5px;
+  text-decoration: underline;
 }
 
 .menu a#profile{
-  padding: 1.35em 0 0 0;
   position: absolute;
-  bottom: 100px;
+  bottom: 10%;
 }
 
-.menu a#profile::after{
+.menu a div#profileLabel{
+  text-align: center;
+  margin-left: 0;
+}
+
+.menu a div#profileLabel::before{
   position:absolute;
-  left: 37%;
+  text-align: center;
   font-size: .8rem;
-  bottom: .5rem;
+  top: 8%;
   content: attr(data-profile);
 }
 
@@ -484,7 +501,7 @@ ul.todoList li.deleted .buttons button.complete{
   visibility: hidden;
 }
 ul.todoList li.deleted .buttons button.remove{
-  margin-left: 25%;
+  margin-left: 50%;
 }
 
 ul.todoList li.over {
@@ -494,6 +511,12 @@ ul.todoList li.over {
 #user{
   position: absolute;
   visibility: hidden;
+}
+
+.tagged{
+  text-decoration: underline;
+  color: var(--mainAccent);
+  cursor: pointer;
 }
 
 @media screen and (max-width: 800px){
@@ -522,26 +545,14 @@ ul.todoList li.over {
   }
 
   .menu a{
-    width: 170px;
-    height: 3.5em;
-    padding: 1.2em 0 0 0;
+    width: 168px;
   }
   .menu a svg{
     width: 25px;
     height: 25px;
     position: absolute;
-    top: 43%;
+    top: 40%;
     left: 10%;
     margin: -8px 0 0 -8px;
-  }
-  .menu a#profile{
-    padding: 1em 0 0 0;
-  }
-  .menu a#profile::after{
-    position:absolute;
-    left: 37%;
-    font-size: .8rem;
-    bottom: .55em;
-    content: attr(data-profile);
   }
 }
