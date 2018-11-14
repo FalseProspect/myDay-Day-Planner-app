@@ -256,6 +256,15 @@ ul.todoList li .buttons button{
   cursor: pointer;
 }
 
+ul.todoList li input{
+  background: rgba(255, 255, 255,0.2);
+  color: var(--itemTextColor);
+  border-radius: 5px;
+  border: 0;
+  padding: 4px 60px 4px 0;
+  width: 100%;
+}
+
 ul.todoList li::after{
   content: '';
   width: 2px;
@@ -390,7 +399,7 @@ ul.todoList::before{
 
 .menu{
   position: fixed;
-  border-right: thin solid var(--itemColor);
+  border-right: thin solid var(--mainAccent);
   width: 170px;
   background: var(--backColor);
   height: 100%; 

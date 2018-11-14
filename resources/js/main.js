@@ -57,6 +57,8 @@ const themes = [
   new theme('Salmon','RGBA(255,113,91,1)'),
   new theme('Skyblue', 'skyblue'),
   new theme('Royal','RGBA(66,2,111,1)'),     // #42026F RGBA(90,45,158,1)
+  new theme('Witch','#4b367c'),     // #42026F RGBA(90,45,158,1)
+  new theme('Tiffany','#00DFE1'),     // #42026F RGBA(90,45,158,1)
   new theme('Mint','RGBA(37,185,154,1)')];    // #25B99A RGBA(37,185,154,1)
 
 //List Item Class
@@ -67,6 +69,8 @@ let listItem = function(obj){
   obj.completionDate= '',
   obj.deletionDate= ''
 };
+
+
 
 //Initial Todo Render
 renderList(view); 
@@ -104,28 +108,28 @@ function sumbitCommand(value){
       setNightMode(JSON.parse(aurgument));
       break;
     case 'unrender':
-    case 'ur-':
+    case '-ur':
       unRenderList();
       break;
     case 'render':
-    case 'r-':
+    case '-r':
       renderList(aurgument);
       break;
     case 'clear':
-    case 'c-':
+    case '-c':
       localStorage.clear();
       break;
     case 'view':
-    case 'v-':
+    case '-v':
       console.log(view);
       break;
     case 'newList':
     case 'newlist':
-    case 'nl-':
+    case '-nl':
       newList(aurgument);
       break;
     case 'newItem':
-    case 'ni-':
+    case '-ni':
       submitItem(aurgument,true);
       break;
     default:
@@ -230,10 +234,10 @@ document.getElementById('Menu').addEventListener('click', ()=>{
 })
 
 function menuClickEvent(value){
-  document.getElementById('itemBin').style.marginLeft = menuOpen ? '0' : '160px';
-  document.getElementById('sideMenu').style.transform = menuOpen ? 'translateX(-200px)' : 'translateX(0px)';
-  document.getElementById('itemBin').style.width = menuOpen ? '100%' : 'calc(100% - 160px)';
-  document.getElementById('clientStatus').style.marginLeft = menuOpen ? '0' : '80px';
+  document.getElementById('itemBin').style.marginLeft = menuOpen ? '160px' : '0';
+  document.getElementById('sideMenu').style.transform = menuOpen ? 'translateX(0px)' : 'translateX(-200px)' ;
+  document.getElementById('itemBin').style.width = menuOpen ? 'calc(100% - 160px)' : '100%';
+  document.getElementById('clientStatus').style.marginLeft = menuOpen ? '80px' : '0';
   localStorage.setItem('menuOpen', JSON.stringify(value));
 }
 
@@ -301,12 +305,42 @@ function headerStyling(){
   document.getElementById('logoSvg').style.width = (isInputActive) ? '0px': '140px';    
 }
 
+
 //Track click focus changes
-document.body.addEventListener('click',()=>{
+document.body.addEventListener('click',(c)=>{
   if(document.activeElement !== document.getElementById('item')){
     isInputActive = false;
     headerStyling();}
+
 })
+
+
+let focusedItem;
+document.addEventListener('click',(c)=>{
+  //Update edited item on click away
+  if(focusedItem && c.target !== focusedItem.element){
+    itemEditUpdate()
+  }
+})
+
+document.addEventListener('keydown',(e)=>{
+  //Update edited item on "Enter"
+  if (e.key === "Enter" && focusedItem) {return itemEditUpdate()};
+})
+
+function itemEditUpdate(){
+  elem = focusedItem.element
+  let inputVal = elem.getElementsByTagName('input')[0].value
+  let buttons = elem.getElementsByTagName('div')[0]
+  let itemPush = focusedItem.item
+  let itemIndex = focusedItem.itemIndex
+  elem.innerText = inputVal
+  elem.appendChild(buttons)
+  itemPush.task = inputVal
+  update(data.todo[itemIndex],itemPush)
+  dataObjectUpdate()
+  focusedItem = null
+}
 
 //'Enter' press = submit
 document.getElementById('item').addEventListener('keydown',function (e) {
@@ -323,8 +357,8 @@ document.getElementById('item').addEventListener('keydown',function (e) {
         cycleInputHistory('DOWN');
       break;
     }
-  
-  }})
+  }
+})
 
 //Toggle CommandMode
 function toggleCommandMode(status) {
@@ -352,6 +386,16 @@ function cycleInputHistory(direction){
   document.getElementById('item').value = inputHistory[inputHistoryIndex];
 }
 
+//Get Tomorrow Date
+const tomorrowsDate = ()=>{
+  let tmrw = new Date();
+  let newDay = tmrw.getDate() + 1;
+  tmrw.setDate(newDay);
+  return tmrw.toLocaleDateString('en-US');
+  }
+
+/////// ITEM SUBMIT \\\\\\\---------------------------------------------------------------------------------------------
+
 //Submit item
 function submitItem(value,override){
   //Push submit to history
@@ -373,8 +417,9 @@ function submitItem(value,override){
           task: value
         };
         listItem(newItem);                                                //Mixin Object
+        if(/([#tmrw])\w+/g.test(value))newItem.creationDate = tomorrowsDate()
         data.todo.push(newItem);                                          //Push to Data
-        addItemTodo(newItem,false);                                             //Render Item
+        addItemTodo(newItem,false);                                       //Render Item
         post(newItem,data.todo.findIndex((item => item === newItem)));    //POST (If signed-in)
         document.getElementById('item').value = '';                       //Clear Input Bar
         dataObjectUpdate();                                               //Save Data Array
@@ -453,7 +498,9 @@ function dataObjectUpdate(){
 function addItemTodo(obj, completed){
   //Check for taggin symbols
   let task = obj.task;
-  let tagSymbs = /([#@])\w+/g;
+
+  //#tags
+  let tagSymbs = /([#]|[@])\w+/g;
   if (tagSymbs.test(task)){
       task = task.split(' ');
       let newTask = [];
@@ -520,7 +567,32 @@ function addItemTodo(obj, completed){
   if (!document.getElementById(item.getAttribute('data-date'))) newList(item.getAttribute('data-date'));
   let list = document.getElementById(item.getAttribute('data-date'));
 
-  //Insert to list
+  item.addEventListener('dblclick', (item)=>{
+    elem = item.target
+    if(elem.className !== 'uncomplete') return
+    let buttons = elem.getElementsByTagName('div')[0]
+    let input = document.createElement('input')
+    input.value = elem.innerText
+    
+    //Get item data
+    itemIndex = data.todo.findIndex((item => item.task === elem.innerText));
+    itemPush = data.todo[itemIndex];
+    
+    console.log(itemPush)
+    elem.innerText = ''
+    elem.appendChild(input)
+    elem.appendChild(buttons)
+    elem.getElementsByTagName('input')[0].focus()
+    focusedItem = {
+      element : elem,
+      itemIndex : itemIndex,
+      item : itemPush
+    }
+
+    return
+  })
+
+  //Create new list
   function newList(listValue){
     let container = document.getElementById('itemBin');
     let newList = document.createElement('ul');
@@ -657,117 +729,168 @@ function removeItem(){
 
 /////// LIST ITEM REORDERING \\\\\\\
 
-let dragSrcEl = null;
-let draggingIndex = undefined;
-let dropIndex = undefined;
-function handleDragStart(e) {
-  dragSrcEl = this;
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/html', this.outerHTML);
+// let dragSrcEl = null;
+// let draggingIndex = undefined;
+// let dropIndex = undefined;
+// function handleDragStart(e) {
+//   dragSrcEl = this;
+//   e.dataTransfer.effectAllowed = 'move';
+//   e.dataTransfer.setData('text/html', this.outerHTML);
 
-  switch(this.getAttribute("class")){
-    case 'uncomplete':
-      draggingIndex = data.todo.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-      break;
-    case 'complete':
-      draggingIndex = data.completed.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-      break;
-    case 'deleted':
-      draggingIndex = data.deleted.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-      break;
-  };
-  console.log(`Dragging Index: ${draggingIndex}`);
-  this.classList.add('dragElem');
-}
+//   switch(this.getAttribute("class")){
+//     case 'uncomplete':
+//       draggingIndex = data.todo.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+//       break;
+//     case 'complete':
+//       draggingIndex = data.completed.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+//       break;
+//     case 'deleted':
+//       draggingIndex = data.deleted.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+//       break;
+//   };
+//   console.log(`Dragging Index: ${draggingIndex}`);
+//   this.classList.add('dragElem');
+// }
 
 
-function handleDragOver(e) {
-  if (e.preventDefault) {
-    e.preventDefault(); // Necessary. Allows us to drop.
-  }
-  this.classList.add('over');
-  e.dataTransfer.dropEffect = 'move';                           // See the section on the DataTransfer object.
-  return false;
-}
+// function handleDragOver(e) {
+//   if (e.preventDefault) {
+//     e.preventDefault(); // Necessary. Allows us to drop.
+//   }
+//   this.classList.add('over');
+//   e.dataTransfer.dropEffect = 'move';                           // See the section on the DataTransfer object.
+//   return false;
+// }
 
-function handleDragEnter(e) {}                                  // this / e.target is the current hover target.
+// function handleDragEnter(e) {}                                  // this / e.target is the current hover target.
 
-function handleDragLeave(e) {this.classList.remove('over')}     // this / e.target is previous target element.
+// function handleDragLeave(e) {this.classList.remove('over')}     // this / e.target is previous target element.
 
-function handleDrop(e) {
-  if (e.stopPropagation) {e.stopPropagation()}                  // Stops some browsers from redirecting.
+// function handleDrop(e) {
+//   if (e.stopPropagation) {e.stopPropagation()}                  // Stops some browsers from redirecting.
   
-  // Don't do anything if dropping the same column we're dragging.
-  if (dragSrcEl != this) {
-    let itemClass = this.getAttribute("class").split(' ')[0];
-    switch(itemClass){
-      case 'uncomplete':
-        dropIndex = data.todo.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-        break;
-      case 'complete':
-        dropIndex = data.completed.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-        break;
-      case 'deleted':
-        dropIndex = data.deleted.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-        break;
-    };
-    console.log(`Dropping in to index pos: ${dropIndex - 1}`);
-    reorderList(draggingIndex,dropIndex, itemClass);
-    this.parentNode.removeChild(dragSrcEl);
-    var dropHTML = e.dataTransfer.getData('text/html');
-    this.insertAdjacentHTML('beforebegin',dropHTML);
-    var dropElem = this.previousSibling;
-    addDnDHandlers(dropElem);
-  }
-  this.classList.remove('over');
-  return false;
-}
+//   // Don't do anything if dropping the same column we're dragging.
+//   if (dragSrcEl != this) {
+//     let itemClass = this.getAttribute("class").split(' ')[0];
+//     switch(itemClass){
+//       case 'uncomplete':
+//         dropIndex = data.todo.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+//         break;
+//       case 'complete':
+//         dropIndex = data.completed.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+//         break;
+//       case 'deleted':
+//         dropIndex = data.deleted.findIndex((item => item.uID === this.getAttribute('data-dateid')));
+//         break;
+//     };
+//     console.log(`Dropping in to index pos: ${dropIndex - 1}`);
+//     reorderList(draggingIndex,dropIndex, itemClass);
+//     this.parentNode.removeChild(dragSrcEl);
+//     var dropHTML = e.dataTransfer.getData('text/html');
+//     this.insertAdjacentHTML('beforebegin',dropHTML);
+//     var dropElem = this.previousSibling;
+//     addDnDHandlers(dropElem);
+//   }
+//   this.classList.remove('over');
+//   return false;
+// }
 
-function reorderList(pos1,pos2,listClass){
-  let index1 = pos1;
-  let index2 = pos2 - 1;
-  let list = listClass;
-  let data1;
-  let data2;
-  switch(list){
-    case 'uncomplete':
-      data1 = data.todo[index1];
-      data2 = data.todo[index2];
-      console.log(`Data 1: ${data1}`);      
-      console.log(`Data 2: ${data2}`);
-      data.todo[index2] = data1;
-      data.todo[index1] = data2;
-      break;
-    case 'complete':
-      data1 = data.todo[index1];
-      data2 = data.todo[index2];
-      data.completed[index2] = data1;
-      data.completed[index1] = data2;
-      break;
-    case 'deleted':
-      data1 = data.todo[index1];
-      data2 = data.todo[index2];
-      data.deleted[index2] = data1;
-      data.deleted[index1] = data2;
-      break;
-  };
-  dataObjectUpdate();
-}
+// function reorderList(pos1,pos2,listClass){
+//   let index1 = pos1;
+//   let index2 = pos2 - 1;
+//   let list = listClass;
+//   let data1;
+//   let data2;
+//   switch(list){
+//     case 'uncomplete':
+//       data1 = data.todo[index1];
+//       data2 = data.todo[index2];
+//       console.log(`Data 1: ${data1}`);      
+//       console.log(`Data 2: ${data2}`);
+//       data.todo[index2] = data1;
+//       data.todo[index1] = data2;
+//       break;
+//     case 'complete':
+//       data1 = data.todo[index1];
+//       data2 = data.todo[index2];
+//       data.completed[index2] = data1;
+//       data.completed[index1] = data2;
+//       break;
+//     case 'deleted':
+//       data1 = data.todo[index1];
+//       data2 = data.todo[index2];
+//       data.deleted[index2] = data1;
+//       data.deleted[index1] = data2;
+//       break;
+//   };
+//   dataObjectUpdate();
+// }
 
-function handleDragEnd(e) {
-  // this/e.target is the source node.
-  this.classList.remove('over');
-}
+// function handleDragEnd(e) {
+//   // this/e.target is the source node.
+//   this.classList.remove('over');
+// }
 
-function addDnDHandlers(elem) {
-  return;
-  elem.addEventListener('dragstart', handleDragStart, false);
-  elem.addEventListener('dragenter', handleDragEnter, false)
-  elem.addEventListener('dragover', handleDragOver, false);
-  elem.addEventListener('dragleave', handleDragLeave, false);
-  elem.addEventListener('drop', handleDrop, false);
-  elem.addEventListener('dragend', handleDragEnd, false);
-}
+// function addDnDHandlers(elem) {
+//   return;
+//   elem.addEventListener('dragstart', handleDragStart, false);
+//   elem.addEventListener('dragenter', handleDragEnter, false)
+//   elem.addEventListener('dragover', handleDragOver, false);
+//   elem.addEventListener('dragleave', handleDragLeave, false);
+//   elem.addEventListener('drop', handleDrop, false);
+//   elem.addEventListener('dragend', handleDragEnd, false);
+// }
 
 //let cols = document.querySelectorAll('ul.todoList li');
 //[].forEach.call(cols, addDnDHandlers);
+
+let touchsurface = document.body,
+        startX,
+        startY,
+        dist,
+        thresholdRight = 150, //required min distance traveled to be considered swipe right
+        thresholdLeft = -150, //required min distance traveled to be considered swipe left
+        allowedTime = 200, // maximum time allowed to travel that distance
+        elapsedTime,
+        startTime
+ 
+    function swipeRight(){
+      console.log('swipe right')
+      menuOpen = true;
+      menuClickEvent(menuOpen);
+    }
+    function swipeLeft(){
+      console.log('swipe left')
+      menuOpen = false;
+      menuClickEvent(menuOpen);
+    }
+
+ 
+    touchsurface.addEventListener('touchstart', function(e){
+        var touchobj = e.changedTouches[0]
+        dist = 0
+        startX = touchobj.pageX
+        startY = touchobj.pageY
+        startTime = new Date().getTime() // record time when finger first makes contact with surface
+        // e.preventDefault()
+    }, false)
+ 
+    touchsurface.addEventListener('touchmove', function(e){
+        // e.preventDefault() // prevent scrolling when inside DIV
+    }, false)
+ 
+    touchsurface.addEventListener('touchend', function(e){
+        var touchobj = e.changedTouches[0]
+        dist = touchobj.pageX - startX // get total dist traveled by finger while in contact with surface
+        elapsedTime = new Date().getTime() - startTime // get time elapsed
+        // check that elapsed time is within specified, horizontal dist traveled >= threshold, and vertical dist traveled <= 100
+        if(elapsedTime <= allowedTime && dist >= thresholdRight && Math.abs(touchobj.pageY - startY) <= 100){
+          console.log('swipe right')
+          swipeRight()}
+        else if(elapsedTime <= allowedTime && dist <= thresholdLeft && Math.abs(touchobj.pageY - startY) <= 100){
+          console.log('swipe left')
+          swipeLeft()}
+        console.log(dist)
+        // e.preventDefault()
+    }, false)
+ 
