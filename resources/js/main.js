@@ -328,6 +328,29 @@ document.addEventListener('keydown',(e)=>{
   if (e.key === "Enter" && focusedItem) {return itemEditUpdate()};
 })
 
+function toggleItemEdit(item){
+  elem = item
+  if(elem.className !== 'uncomplete') return
+  let buttons = elem.getElementsByTagName('div')[0]
+  let input = document.createElement('input')
+  input.value = elem.innerText
+  
+  //Get item data
+  itemIndex = data.todo.findIndex((item => item.task === elem.innerText));
+  itemPush = data.todo[itemIndex];
+  
+  console.log(itemPush)
+  elem.innerText = ''
+  elem.appendChild(input)
+  elem.appendChild(buttons)
+  elem.getElementsByTagName('input')[0].focus()
+  focusedItem = {
+    element : elem,
+    itemIndex : itemIndex,
+    item : itemPush
+  }
+}
+
 function itemEditUpdate(){
   elem = focusedItem.element
   let inputVal = elem.getElementsByTagName('input')[0].value
@@ -567,30 +590,7 @@ function addItemTodo(obj, completed){
   if (!document.getElementById(item.getAttribute('data-date'))) newList(item.getAttribute('data-date'));
   let list = document.getElementById(item.getAttribute('data-date'));
 
-  item.addEventListener('dblclick', (item)=>{
-    elem = item.target
-    if(elem.className !== 'uncomplete') return
-    let buttons = elem.getElementsByTagName('div')[0]
-    let input = document.createElement('input')
-    input.value = elem.innerText
-    
-    //Get item data
-    itemIndex = data.todo.findIndex((item => item.task === elem.innerText));
-    itemPush = data.todo[itemIndex];
-    
-    console.log(itemPush)
-    elem.innerText = ''
-    elem.appendChild(input)
-    elem.appendChild(buttons)
-    elem.getElementsByTagName('input')[0].focus()
-    focusedItem = {
-      element : elem,
-      itemIndex : itemIndex,
-      item : itemPush
-    }
-
-    return
-  })
+  item.addEventListener('dblclick', (item)=>{toggleItemEdit(item.value)})
 
   //Create new list
   function newList(listValue){
@@ -853,44 +853,61 @@ let touchsurface = document.body,
         allowedTime = 200, // maximum time allowed to travel that distance
         elapsedTime,
         startTime
+
+let doubleTapSurface = document.querySelectorAll('ul.todoList li')
+
+let dblTouch = 0;
+function dblTapEvent(elem){
+  elem.addEventListener('touchstart', (e)=>{
+    dblTouch ++
+    setTimeout(()=>{
+      dblTouch = 0;
+    }, 500)
+    if(dblTouch === 2) toggleItemEdit(elem)
+    console.log(dblTouch)})
+}
+
+let cols = document.querySelectorAll('ul.todoList li');
+[].forEach.call(cols, dblTapEvent);
  
-    function swipeRight(){
-      console.log('swipe right')
-      menuOpen = true;
-      menuClickEvent(menuOpen);
-    }
-    function swipeLeft(){
-      console.log('swipe left')
-      menuOpen = false;
-      menuClickEvent(menuOpen);
-    }
+function swipeRight(){
+  console.log('swipe right')
+  menuOpen = true;
+  menuClickEvent(menuOpen);
+}
+function swipeLeft(){
+  console.log('swipe left')
+  menuOpen = false;
+  menuClickEvent(menuOpen);
+}
 
  
-    touchsurface.addEventListener('touchstart', function(e){
-        var touchobj = e.changedTouches[0]
-        dist = 0
-        startX = touchobj.pageX
-        startY = touchobj.pageY
-        startTime = new Date().getTime() // record time when finger first makes contact with surface
-        // e.preventDefault()
-    }, false)
+touchsurface.addEventListener('touchstart', function(e){
+  if(focusedItem)return
+    var touchobj = e.changedTouches[0]
+    dist = 0
+    startX = touchobj.pageX
+    startY = touchobj.pageY
+    startTime = new Date().getTime() // record time when finger first makes contact with surface
+    // e.preventDefault()
+}, false)
  
-    touchsurface.addEventListener('touchmove', function(e){
-        // e.preventDefault() // prevent scrolling when inside DIV
-    }, false)
- 
-    touchsurface.addEventListener('touchend', function(e){
-        var touchobj = e.changedTouches[0]
-        dist = touchobj.pageX - startX // get total dist traveled by finger while in contact with surface
-        elapsedTime = new Date().getTime() - startTime // get time elapsed
-        // check that elapsed time is within specified, horizontal dist traveled >= threshold, and vertical dist traveled <= 100
-        if(elapsedTime <= allowedTime && dist >= thresholdRight && Math.abs(touchobj.pageY - startY) <= 100){
-          console.log('swipe right')
-          swipeRight()}
-        else if(elapsedTime <= allowedTime && dist <= thresholdLeft && Math.abs(touchobj.pageY - startY) <= 100){
-          console.log('swipe left')
-          swipeLeft()}
-        console.log(dist)
-        // e.preventDefault()
-    }, false)
- 
+touchsurface.addEventListener('touchmove', function(e){
+  if(focusedItem)return
+    // e.preventDefault() // prevent scrolling when inside DIV
+}, false)
+
+touchsurface.addEventListener('touchend', function(e){
+    if(focusedItem)return
+    var touchobj = e.changedTouches[0]
+    dist = touchobj.pageX - startX // get total dist traveled by finger while in contact with surface
+    elapsedTime = new Date().getTime() - startTime // get time elapsed
+    // check that elapsed time is within specified, horizontal dist traveled >= threshold, and vertical dist traveled <= 100
+    if(elapsedTime <= allowedTime && dist >= thresholdRight && Math.abs(touchobj.pageY - startY) <= 100){
+      console.log('swipe right')
+      swipeRight()}
+    else if(elapsedTime <= allowedTime && dist <= thresholdLeft && Math.abs(touchobj.pageY - startY) <= 100){
+      console.log('swipe left')
+      swipeLeft()}
+    // e.preventDefault()
+}, false)
