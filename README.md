@@ -7,12 +7,11 @@ Decription:
 The myDay:Day Planner (web)app is a productivity app that groups your day by day task in a clear and clean mannner.
 
 Features:
-- Timestamped and organized task
-- Light and Dark mode
-- Switchable themes
-- Clean and friendly user interface
+- Use the myDay:Day Planner app to easily structure and time out your planned tasks of the day
+- Enjoy a clean and easy to use interface that can be styled to your appeal
+- Utilitze a native Light and Dark theme
+- Synchronize across all your web accessable devices so you'll never lose productivity
 
 Instructions:
-Open the index.html file in your internet browser of choice.
-Type your task into the input bar at the top.
-Press the plus icon to the far or press the "Enter" to save you task.
+
+Please visit myDay.falseprospect.com
