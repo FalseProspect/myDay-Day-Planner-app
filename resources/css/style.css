@@ -399,8 +399,8 @@ ul.todoList::before{
 
 .menu{
   position: fixed;
-  border-right: thin solid var(--mainAccent);
-  width: 170px;
+  border-right: 2px solid var(--mainAccent);
+  width: 145px;
   background: var(--backColor);
   height: 100%; 
   transform: translateX(-200px);
