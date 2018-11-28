@@ -27,9 +27,9 @@ let url = `${location.protocol}//${location.host}`;
   let menuOpen = (localStorage.getItem('menuOpen')) ? JSON.parse(localStorage.getItem('menuOpen')) : false;
 
 // SVG Icons
-let removeSVG = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 22 22" style="enable-background:new 0 0 22 22;" xml:space="preserve"><rect class="noFill" width="22" height="22"/><g><g><path class="fill" d="M16.1,3.6h-1.9V3.3c0-1.3-1-2.3-2.3-2.3h-1.7C8.9,1,7.8,2,7.8,3.3v0.2H5.9c-1.3,0-2.3,1-2.3,2.3v1.3c0,0.5,0.4,0.9,0.9,1v10.5c0,1.3,1,2.3,2.3,2.3h8.5c1.3,0,2.3-1,2.3-2.3V8.2c0.5-0.1,0.9-0.5,0.9-1V5.9C18.4,4.6,17.4,3.6,16.1,3.6z M9.1,3.3c0-0.6,0.5-1.1,1.1-1.1h1.7c0.6,0,1.1,0.5,1.1,1.1v0.2H9.1V3.3z M16.3,18.7c0,0.6-0.5,1.1-1.1,1.1H6.7c-0.6,0-1.1-0.5-1.1-1.1V8.2h10.6L16.3,18.7L16.3,18.7z M17.2,7H4.8V5.9c0-0.6,0.5-1.1,1.1-1.1h10.2c0.6,0,1.1,0.5,1.1,1.1V7z"/></g><g><g><path class="fill" d="M11,18c-0.4,0-0.6-0.3-0.6-0.6v-6.8c0-0.4,0.3-0.6,0.6-0.6s0.6,0.3,0.6,0.6v6.8C11.6,17.7,11.4,18,11,18z"/></g><g><path class="fill" d="M8,18c-0.4,0-0.6-0.3-0.6-0.6v-6.8C7.4,10.2,7.7,10,8,10c0.4,0,0.6,0.3,0.6,0.6v6.8C8.7,17.7,8.4,18,8,18z"/></g><g><path class="fill" d="M14,18c-0.4,0-0.6-0.3-0.6-0.6v-6.8c0-0.4,0.3-0.6,0.6-0.6c0.4,0,0.6,0.3,0.6,0.6v6.8C14.6,17.7,14.3,18,14,18z"/></g></g></g></svg>';
-let completeSVG = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 22 22" style="enable-background:new 0 0 22 22;" xml:space="preserve"><rect y="0" class="noFill" width="22" height="22"/><g><path class="fill" d="M9.7,14.4L9.7,14.4c-0.2,0-0.4-0.1-0.5-0.2l-2.7-2.7c-0.3-0.3-0.3-0.8,0-1.1s0.8-0.3,1.1,0l2.1,2.1l4.8-4.8c0.3-0.3,0.8-0.3,1.1,0s0.3,0.8,0,1.1l-5.3,5.3C10.1,14.3,9.9,14.4,9.7,14.4z"/></g></svg>';
-let themeSVG = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-167.5 435.5 30 30" style="enable-background:new -167.5 435.5 30 30;" xml:space="preserve"><g><path class="fill" d="M-141.8,440.9c-3-3.5-7-5.4-11.2-5.4c-3.5,0-6.9,1.4-9.4,3.8c-4,3.9-5.4,8.6-3.7,12.9c1.4,3.4,4.6,5.9,7.8,5.9c0.1,0,0.2,0,0.3,0c0.5,0,0.9-0.1,1.4-0.1c0.5,0,1-0.1,1.5-0.1c1.1,0,2,0,2,2.7c0,2.9,1.8,4.9,4.3,4.9c0,0,0,0,0,0c1.8,0,3.8-1,5.8-3c2.6-2.6,4.4-6.3,4.8-10.1C-137.8,448.2-139.1,444.1-141.8,440.9z M-144.5,461c-1.6,1.6-3.1,2.4-4.3,2.4c-1.6,0-2.2-1.5-2.2-2.9c0-3.3-1.3-4.8-4.1-4.8c-0.5,0-1.1,0-1.7,0.1c-0.4,0-0.9,0.1-1.3,0.1c-0.1,0-0.1,0-0.2,0c-2.3,0-4.8-1.9-5.9-4.6c-1.4-3.4-0.2-7.3,3.2-10.6c2.1-2.1,5-3.2,8-3.2c3.6,0,7,1.7,9.6,4.7C-138.3,448.2-140,456.4-144.5,461z"/><path class="fill" d="M-148,452.3c0,1.7,1.4,3.2,3.1,3.2c1.7,0,3.1-1.4,3.1-3.2c0-1.7-1.4-3.2-3.1-3.2C-146.6,449.1-148,450.5-148,452.3z M-143.9,452.3c0,0.6-0.5,1.1-1.1,1.1c-0.6,0-1.1-0.5-1.1-1.1c0-0.6,0.5-1.1,1.1-1.1C-144.3,451.2-143.9,451.7-143.9,452.3z"/><path class="fill" d="M-144.6,444.9c0-1.7-1.4-3.2-3.1-3.2c-1.7,0-3.1,1.4-3.1,3.2c0,1.7,1.4,3.2,3.1,3.2C-146,448.1-144.6,446.7-144.6,444.9z M-148.8,444.9c0-0.6,0.5-1.1,1.1-1.1c0.6,0,1.1,0.5,1.1,1.1c0,0.6-0.5,1.1-1.1,1.1C-148.3,446-148.8,445.5-148.8,444.9z"/><path class="fill" d="M-154.9,439.5c-1.7,0-3.1,1.4-3.1,3.2c0,1.7,1.4,3.2,3.1,3.2s3.1-1.4,3.1-3.2C-151.8,440.9-153.2,439.5-154.9,439.5z M-154.9,443.7c-0.6,0-1.1-0.5-1.1-1.1c0-0.6,0.5-1.1,1.1-1.1c0.6,0,1.1,0.5,1.1,1.1C-153.8,443.2-154.3,443.7-154.9,443.7z"/><path class="fill" d="M-160.3,444.9c-1.7,0-3.1,1.4-3.1,3.2c0,1.7,1.4,3.2,3.1,3.2s3.1-1.4,3.1-3.2C-157.2,446.3-158.6,444.9-160.3,444.9z M-160.3,449.1c-0.6,0-1.1-0.5-1.1-1.1c0-0.6,0.5-1.1,1.1-1.1c0.6,0,1.1,0.5,1.1,1.1C-159.3,448.6-159.8,449.1-160.3,449.1z"/></g></svg>';
+let removeSVG = '<svg x="0px" y="0px" viewBox="0 0 22 22" style="enable-background:new 0 0 22 22;" xml:space="preserve"><rect class="noFill" width="22" height="22"/><g><g><path class="fill" d="M16.1,3.6h-1.9V3.3c0-1.3-1-2.3-2.3-2.3h-1.7C8.9,1,7.8,2,7.8,3.3v0.2H5.9c-1.3,0-2.3,1-2.3,2.3v1.3c0,0.5,0.4,0.9,0.9,1v10.5c0,1.3,1,2.3,2.3,2.3h8.5c1.3,0,2.3-1,2.3-2.3V8.2c0.5-0.1,0.9-0.5,0.9-1V5.9C18.4,4.6,17.4,3.6,16.1,3.6z M9.1,3.3c0-0.6,0.5-1.1,1.1-1.1h1.7c0.6,0,1.1,0.5,1.1,1.1v0.2H9.1V3.3z M16.3,18.7c0,0.6-0.5,1.1-1.1,1.1H6.7c-0.6,0-1.1-0.5-1.1-1.1V8.2h10.6L16.3,18.7L16.3,18.7z M17.2,7H4.8V5.9c0-0.6,0.5-1.1,1.1-1.1h10.2c0.6,0,1.1,0.5,1.1,1.1V7z"/></g><g><g><path class="fill" d="M11,18c-0.4,0-0.6-0.3-0.6-0.6v-6.8c0-0.4,0.3-0.6,0.6-0.6s0.6,0.3,0.6,0.6v6.8C11.6,17.7,11.4,18,11,18z"/></g><g><path class="fill" d="M8,18c-0.4,0-0.6-0.3-0.6-0.6v-6.8C7.4,10.2,7.7,10,8,10c0.4,0,0.6,0.3,0.6,0.6v6.8C8.7,17.7,8.4,18,8,18z"/></g><g><path class="fill" d="M14,18c-0.4,0-0.6-0.3-0.6-0.6v-6.8c0-0.4,0.3-0.6,0.6-0.6c0.4,0,0.6,0.3,0.6,0.6v6.8C14.6,17.7,14.3,18,14,18z"/></g></g></g></svg>';
+let completeSVG = '<svg x="0px" y="0px" viewBox="0 0 22 22" style="enable-background:new 0 0 22 22;" xml:space="preserve"><rect y="0" class="noFill" width="22" height="22"/><g><path class="fill" d="M9.7,14.4L9.7,14.4c-0.2,0-0.4-0.1-0.5-0.2l-2.7-2.7c-0.3-0.3-0.3-0.8,0-1.1s0.8-0.3,1.1,0l2.1,2.1l4.8-4.8c0.3-0.3,0.8-0.3,1.1,0s0.3,0.8,0,1.1l-5.3,5.3C10.1,14.3,9.9,14.4,9.7,14.4z"/></g></svg>';
+let themeSVG = '<svg x="0px" y="0px" viewBox="-167.5 435.5 30 30" style="enable-background:new -167.5 435.5 30 30;" xml:space="preserve"><g><path class="fill" d="M-141.8,440.9c-3-3.5-7-5.4-11.2-5.4c-3.5,0-6.9,1.4-9.4,3.8c-4,3.9-5.4,8.6-3.7,12.9c1.4,3.4,4.6,5.9,7.8,5.9c0.1,0,0.2,0,0.3,0c0.5,0,0.9-0.1,1.4-0.1c0.5,0,1-0.1,1.5-0.1c1.1,0,2,0,2,2.7c0,2.9,1.8,4.9,4.3,4.9c0,0,0,0,0,0c1.8,0,3.8-1,5.8-3c2.6-2.6,4.4-6.3,4.8-10.1C-137.8,448.2-139.1,444.1-141.8,440.9z M-144.5,461c-1.6,1.6-3.1,2.4-4.3,2.4c-1.6,0-2.2-1.5-2.2-2.9c0-3.3-1.3-4.8-4.1-4.8c-0.5,0-1.1,0-1.7,0.1c-0.4,0-0.9,0.1-1.3,0.1c-0.1,0-0.1,0-0.2,0c-2.3,0-4.8-1.9-5.9-4.6c-1.4-3.4-0.2-7.3,3.2-10.6c2.1-2.1,5-3.2,8-3.2c3.6,0,7,1.7,9.6,4.7C-138.3,448.2-140,456.4-144.5,461z"/><path class="fill" d="M-148,452.3c0,1.7,1.4,3.2,3.1,3.2c1.7,0,3.1-1.4,3.1-3.2c0-1.7-1.4-3.2-3.1-3.2C-146.6,449.1-148,450.5-148,452.3z M-143.9,452.3c0,0.6-0.5,1.1-1.1,1.1c-0.6,0-1.1-0.5-1.1-1.1c0-0.6,0.5-1.1,1.1-1.1C-144.3,451.2-143.9,451.7-143.9,452.3z"/><path class="fill" d="M-144.6,444.9c0-1.7-1.4-3.2-3.1-3.2c-1.7,0-3.1,1.4-3.1,3.2c0,1.7,1.4,3.2,3.1,3.2C-146,448.1-144.6,446.7-144.6,444.9z M-148.8,444.9c0-0.6,0.5-1.1,1.1-1.1c0.6,0,1.1,0.5,1.1,1.1c0,0.6-0.5,1.1-1.1,1.1C-148.3,446-148.8,445.5-148.8,444.9z"/><path class="fill" d="M-154.9,439.5c-1.7,0-3.1,1.4-3.1,3.2c0,1.7,1.4,3.2,3.1,3.2s3.1-1.4,3.1-3.2C-151.8,440.9-153.2,439.5-154.9,439.5z M-154.9,443.7c-0.6,0-1.1-0.5-1.1-1.1c0-0.6,0.5-1.1,1.1-1.1c0.6,0,1.1,0.5,1.1,1.1C-153.8,443.2-154.3,443.7-154.9,443.7z"/><path class="fill" d="M-160.3,444.9c-1.7,0-3.1,1.4-3.1,3.2c0,1.7,1.4,3.2,3.1,3.2s3.1-1.4,3.1-3.2C-157.2,446.3-158.6,444.9-160.3,444.9z M-160.3,449.1c-0.6,0-1.1-0.5-1.1-1.1c0-0.6,0.5-1.1,1.1-1.1c0.6,0,1.1,0.5,1.1,1.1C-159.3,448.6-159.8,449.1-160.3,449.1z"/></g></svg>';
 
 // Views
 const viewings = {
@@ -83,59 +83,6 @@ setNightMode(nightMode);
 
 //Menu Status
 menuClickEvent(menuOpen);
-
-
-/////// Command Mode (Debugging) \\\\\\\\
-
-//Command Variable
-let cmdMode = false
-
-//Sumbit Command
-function sumbitCommand(value){
-  let command = value.split(' ')
-  let aurgument = command.slice(1,).join(' ');
-  document.getElementById('item').value = ''; //Clear input bar
-  //console.log(aurgument);
-  switch(command[0]){
-    case 'theme':
-    document.getElementById('themeLabel').innerHTML = "Custom";
-    document.documentElement.style.setProperty('--mainAccent', aurgument);
-      break;
-    case 'cmd':
-      toggleCommandMode(JSON.parse(aurgument));
-      break;
-    case 'night':
-      setNightMode(JSON.parse(aurgument));
-      break;
-    case 'unrender':
-    case '-ur':
-      unRenderList();
-      break;
-    case 'render':
-    case '-r':
-      renderList(aurgument);
-      break;
-    case 'clear':
-    case '-c':
-      localStorage.clear();
-      break;
-    case 'view':
-    case '-v':
-      console.log(view);
-      break;
-    case 'newList':
-    case 'newlist':
-    case '-nl':
-      newList(aurgument);
-      break;
-    case 'newItem':
-    case '-ni':
-      submitItem(aurgument,true);
-      break;
-    default:
-      console.log(`"${command[0]}" command not recognized`);
-  }
-}
 
 /////// HTML REQUEST \\\\\\\\
 
@@ -224,191 +171,7 @@ function remove(obj){
   xhr.open('POST',`${url}/remove`);                                            //Open Socket
   xhr.send(removeItem);                                                                       //Send to Node
 }
-
-/////// USER INTERFACE FUNCTIONS \\\\\\\\---------------------------------------------------------------------------------------------
-
-//Menu Event Listener
-document.getElementById('Menu').addEventListener('click', ()=>{
-  menuOpen = !menuOpen;
-  menuClickEvent(menuOpen);
-})
-
-function menuClickEvent(value){
-  document.getElementById('itemBin').style.marginLeft = menuOpen ? '160px' : '0';
-  document.getElementById('sideMenu').style.transform = menuOpen ? 'translateX(0px)' : 'translateX(-200px)' ;
-  document.getElementById('itemBin').style.width = menuOpen ? 'calc(100% - 160px)' : '100%';
-  document.getElementById('clientStatus').style.marginLeft = menuOpen ? '80px' : '0';
-  localStorage.setItem('menuOpen', JSON.stringify(value));
-}
-
-//Theme change click event
-document.getElementById('theme').addEventListener('click', function(){
-  themeIndex !== themes.length - 1 ? themeIndex ++ : themeIndex = 0; 
-  themeSwitch(themeIndex);
-})
-
-//Theme Switcher
-function themeSwitch(index){
-  let theme = themes[index];
-  document.getElementById('themeLabel').innerHTML = theme.name;
-  document.documentElement.style.setProperty('--mainAccent', theme.mainColor);
-  localStorage.setItem('themeIndex', JSON.stringify(index));
-}
-
-//Night Mode toggle on click
-document.getElementById('night').addEventListener('click', function(){
-  nightMode = !nightMode;
-  setNightMode(nightMode);
-})
-
-//Set Night Mode
-function setNightMode(value){
-  document.documentElement.style.setProperty('--backColor', value ? '#282828' : '#edf0f1');
-  document.documentElement.style.setProperty('--itemColor', value ? '#454545' : '#fff');
-  document.documentElement.style.setProperty('--containerTextColor', value ? '#aaa' : '#666');
-  document.documentElement.style.setProperty('--menuHoverColor', value ? '#444' : '#aaa');
-  document.documentElement.style.setProperty('--itemTextColor', value ? '#ddd' : '#444');
-  document.documentElement.style.setProperty('--itemCompleteColor', value ? 'rgba(68,68,68,.3)' : 'rgba(255,255,255,.25)');
-  document.getElementById('nightLabel').innerHTML =`Night: ${nightMode ? 'ON' : 'OFF'}`;
-  localStorage.setItem('nightMode', JSON.stringify(value));
-}
-
-//Task Button
-document.getElementById('tasks').addEventListener('click', function(){
-  renderList(viewings.TASKS);
-});
-
-//Delete Button
-document.getElementById('deleted').addEventListener('click', function(){
-  renderList(viewings.DELETED);
-});
-
-//Completed Button
-document.getElementById('done').addEventListener('click', function(){
-  renderList(viewings.DONE_TASKS);
-});
-
-//Focus on input on load
-document.getElementById('item').focus();
-
-//Add button pressed
-document.getElementById('add').addEventListener('click', function(){
-  let value = document.getElementById('item').value.trim();
-  if(value){submitItem(value)}
-})
-
-//Header Logo and input bar transitions
-function headerStyling(){
-  document.getElementById('item').style.marginLeft = (isInputActive) ? '55px': '200px';
-  document.getElementById('item').style.width = (isInputActive) ? 'calc(100% - 55px)': 'calc(100% - 200px)';
-  document.getElementById('logo').style.width = (isInputActive) ? '0px': '140px';  
-  document.getElementById('logoSvg').style.width = (isInputActive) ? '0px': '140px';    
-}
-
-
-//Track click focus changes
-document.body.addEventListener('click',(c)=>{
-  if(document.activeElement !== document.getElementById('item')){
-    isInputActive = false;
-    headerStyling();}
-
-})
-
-
-let focusedItem;
-document.addEventListener('click',(c)=>{
-  //Update edited item on click away
-  if(focusedItem && c.target !== focusedItem.element){
-    itemEditUpdate()
-  }
-})
-
-document.addEventListener('keydown',(e)=>{
-  //Update edited item on "Enter"
-  if (e.key === "Enter" && focusedItem) {return itemEditUpdate()};
-})
-
-function toggleItemEdit(item){
-  elem = item
-  if(elem.className !== 'uncomplete') return
-  let buttons = elem.getElementsByTagName('div')[0]
-  let input = document.createElement('input')
-  input.value = elem.innerText
   
-  //Get item data
-  itemIndex = data.todo.findIndex((item => item.task === elem.innerText));
-  itemPush = data.todo[itemIndex];
-  
-  console.log(itemPush)
-  elem.innerText = ''
-  elem.appendChild(input)
-  elem.appendChild(buttons)
-  elem.getElementsByTagName('input')[0].focus()
-  focusedItem = {
-    element : elem,
-    itemIndex : itemIndex,
-    item : itemPush
-  }
-}
-
-function itemEditUpdate(){
-  elem = focusedItem.element
-  let inputVal = elem.getElementsByTagName('input')[0].value
-  let buttons = elem.getElementsByTagName('div')[0]
-  let itemPush = focusedItem.item
-  let itemIndex = focusedItem.itemIndex
-  elem.innerText = inputVal
-  elem.appendChild(buttons)
-  itemPush.task = inputVal
-  update(data.todo[itemIndex],itemPush)
-  dataObjectUpdate()
-  focusedItem = null
-}
-
-//'Enter' press = submit
-document.getElementById('item').addEventListener('keydown',function (e) {
-  let value = document.getElementById('item').value.trim();
-  isInputActive = (document.activeElement === this && value.length > -1)
-  headerStyling();
-  if (e.key === "Enter" && value) {return submitItem(value)};
-  if (document.activeElement === this){
-    switch(e.key){
-      case "ArrowUp":
-        cycleInputHistory('UP');
-        break;
-      case "ArrowDown":
-        cycleInputHistory('DOWN');
-      break;
-    }
-  }
-})
-
-//Toggle CommandMode
-function toggleCommandMode(status) {
-  status ? document.getElementById('themeLabel').innerHTML = `Void` : themeSwitch(themeIndex);
-  status ? document.documentElement.style.setProperty('--mainAccent', '#000') : themeSwitch(themeIndex);
-  document.getElementById('item').value = '';
-}
-
-//Store input history to be recalled again (Like command prompt)
-let inputHistory = [];
-let inputHistoryIndex = -1;
-
-function cycleInputHistory(direction){
-  switch(direction){
-    case "DOWN":
-      if(!inputHistory[inputHistoryIndex + 1]){return};
-      inputHistoryIndex ++;
-      break;
-    case "UP":
-      if(!inputHistory[inputHistoryIndex - 1] && inputHistoryIndex - 1 !== -1){return};
-      inputHistoryIndex --;
-      break;
-  }
-  if(inputHistory[inputHistoryIndex] === undefined){return document.getElementById('item').value = ''};
-  document.getElementById('item').value = inputHistory[inputHistoryIndex];
-}
-
 //Get Tomorrow Date
 const tomorrowsDate = ()=>{
   let tmrw = new Date();
@@ -416,6 +179,9 @@ const tomorrowsDate = ()=>{
   tmrw.setDate(newDay);
   return tmrw.toLocaleDateString('en-US');
   }
+
+
+
 
 /////// ITEM SUBMIT \\\\\\\---------------------------------------------------------------------------------------------
 
@@ -440,7 +206,8 @@ function submitItem(value,override){
           task: value
         };
         listItem(newItem);                                                //Mixin Object
-        if(/([#tmrw])\w+/g.test(value))newItem.creationDate = tomorrowsDate()
+        if(/([#])\w+/g.test(value))wordTag(value)
+        // if(/([#])\w+/g.test(value))newItem.creationDate = tomorrowsDate()
         data.todo.push(newItem);                                          //Push to Data
         addItemTodo(newItem,false);                                       //Render Item
         post(newItem,data.todo.findIndex((item => item === newItem)));    //POST (If signed-in)
@@ -449,6 +216,8 @@ function submitItem(value,override){
       }
   }
 };
+
+
 
 /////// RENDERING FUNCTIONS \\\\\\\---------------------------------------------------------------------------------------------
 
@@ -590,7 +359,7 @@ function addItemTodo(obj, completed){
   if (!document.getElementById(item.getAttribute('data-date'))) newList(item.getAttribute('data-date'));
   let list = document.getElementById(item.getAttribute('data-date'));
 
-  item.addEventListener('dblclick', (item)=>{toggleItemEdit(item.value)})
+  item.addEventListener('dblclick', (item)=>{toggleItemEdit(item.target)})
 
   //Create new list
   function newList(listValue){
@@ -616,7 +385,6 @@ function addItemTodo(obj, completed){
       for (let i in list.childNodes){
         if(list.childNodes[i].className === 'uncomplete'){dist ++};
       }
-      console.log(insert);
       list.insertBefore(item, list.childNodes[dist]);
   }
 }
@@ -725,189 +493,3 @@ function removeItem(){
   }
   dataObjectUpdate();
 }
-
-
-/////// LIST ITEM REORDERING \\\\\\\
-
-// let dragSrcEl = null;
-// let draggingIndex = undefined;
-// let dropIndex = undefined;
-// function handleDragStart(e) {
-//   dragSrcEl = this;
-//   e.dataTransfer.effectAllowed = 'move';
-//   e.dataTransfer.setData('text/html', this.outerHTML);
-
-//   switch(this.getAttribute("class")){
-//     case 'uncomplete':
-//       draggingIndex = data.todo.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-//       break;
-//     case 'complete':
-//       draggingIndex = data.completed.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-//       break;
-//     case 'deleted':
-//       draggingIndex = data.deleted.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-//       break;
-//   };
-//   console.log(`Dragging Index: ${draggingIndex}`);
-//   this.classList.add('dragElem');
-// }
-
-
-// function handleDragOver(e) {
-//   if (e.preventDefault) {
-//     e.preventDefault(); // Necessary. Allows us to drop.
-//   }
-//   this.classList.add('over');
-//   e.dataTransfer.dropEffect = 'move';                           // See the section on the DataTransfer object.
-//   return false;
-// }
-
-// function handleDragEnter(e) {}                                  // this / e.target is the current hover target.
-
-// function handleDragLeave(e) {this.classList.remove('over')}     // this / e.target is previous target element.
-
-// function handleDrop(e) {
-//   if (e.stopPropagation) {e.stopPropagation()}                  // Stops some browsers from redirecting.
-  
-//   // Don't do anything if dropping the same column we're dragging.
-//   if (dragSrcEl != this) {
-//     let itemClass = this.getAttribute("class").split(' ')[0];
-//     switch(itemClass){
-//       case 'uncomplete':
-//         dropIndex = data.todo.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-//         break;
-//       case 'complete':
-//         dropIndex = data.completed.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-//         break;
-//       case 'deleted':
-//         dropIndex = data.deleted.findIndex((item => item.uID === this.getAttribute('data-dateid')));
-//         break;
-//     };
-//     console.log(`Dropping in to index pos: ${dropIndex - 1}`);
-//     reorderList(draggingIndex,dropIndex, itemClass);
-//     this.parentNode.removeChild(dragSrcEl);
-//     var dropHTML = e.dataTransfer.getData('text/html');
-//     this.insertAdjacentHTML('beforebegin',dropHTML);
-//     var dropElem = this.previousSibling;
-//     addDnDHandlers(dropElem);
-//   }
-//   this.classList.remove('over');
-//   return false;
-// }
-
-// function reorderList(pos1,pos2,listClass){
-//   let index1 = pos1;
-//   let index2 = pos2 - 1;
-//   let list = listClass;
-//   let data1;
-//   let data2;
-//   switch(list){
-//     case 'uncomplete':
-//       data1 = data.todo[index1];
-//       data2 = data.todo[index2];
-//       console.log(`Data 1: ${data1}`);      
-//       console.log(`Data 2: ${data2}`);
-//       data.todo[index2] = data1;
-//       data.todo[index1] = data2;
-//       break;
-//     case 'complete':
-//       data1 = data.todo[index1];
-//       data2 = data.todo[index2];
-//       data.completed[index2] = data1;
-//       data.completed[index1] = data2;
-//       break;
-//     case 'deleted':
-//       data1 = data.todo[index1];
-//       data2 = data.todo[index2];
-//       data.deleted[index2] = data1;
-//       data.deleted[index1] = data2;
-//       break;
-//   };
-//   dataObjectUpdate();
-// }
-
-// function handleDragEnd(e) {
-//   // this/e.target is the source node.
-//   this.classList.remove('over');
-// }
-
-// function addDnDHandlers(elem) {
-//   return;
-//   elem.addEventListener('dragstart', handleDragStart, false);
-//   elem.addEventListener('dragenter', handleDragEnter, false)
-//   elem.addEventListener('dragover', handleDragOver, false);
-//   elem.addEventListener('dragleave', handleDragLeave, false);
-//   elem.addEventListener('drop', handleDrop, false);
-//   elem.addEventListener('dragend', handleDragEnd, false);
-// }
-
-//let cols = document.querySelectorAll('ul.todoList li');
-//[].forEach.call(cols, addDnDHandlers);
-
-let touchsurface = document.body,
-        startX,
-        startY,
-        dist,
-        thresholdRight = 150, //required min distance traveled to be considered swipe right
-        thresholdLeft = -150, //required min distance traveled to be considered swipe left
-        allowedTime = 200, // maximum time allowed to travel that distance
-        elapsedTime,
-        startTime
-
-let doubleTapSurface = document.querySelectorAll('ul.todoList li')
-
-let dblTouch = 0;
-function dblTapEvent(elem){
-  elem.addEventListener('touchstart', (e)=>{
-    dblTouch ++
-    setTimeout(()=>{
-      dblTouch = 0;
-    }, 500)
-    if(dblTouch === 2) toggleItemEdit(elem)
-    console.log(dblTouch)})
-}
-
-let cols = document.querySelectorAll('ul.todoList li');
-[].forEach.call(cols, dblTapEvent);
- 
-function swipeRight(){
-  console.log('swipe right')
-  menuOpen = true;
-  menuClickEvent(menuOpen);
-}
-function swipeLeft(){
-  console.log('swipe left')
-  menuOpen = false;
-  menuClickEvent(menuOpen);
-}
-
- 
-touchsurface.addEventListener('touchstart', function(e){
-  if(focusedItem)return
-    var touchobj = e.changedTouches[0]
-    dist = 0
-    startX = touchobj.pageX
-    startY = touchobj.pageY
-    startTime = new Date().getTime() // record time when finger first makes contact with surface
-    // e.preventDefault()
-}, false)
- 
-touchsurface.addEventListener('touchmove', function(e){
-  if(focusedItem)return
-    // e.preventDefault() // prevent scrolling when inside DIV
-}, false)
-
-touchsurface.addEventListener('touchend', function(e){
-    if(focusedItem)return
-    var touchobj = e.changedTouches[0]
-    dist = touchobj.pageX - startX // get total dist traveled by finger while in contact with surface
-    elapsedTime = new Date().getTime() - startTime // get time elapsed
-    // check that elapsed time is within specified, horizontal dist traveled >= threshold, and vertical dist traveled <= 100
-    if(elapsedTime <= allowedTime && dist >= thresholdRight && Math.abs(touchobj.pageY - startY) <= 100){
-      console.log('swipe right')
-      swipeRight()}
-    else if(elapsedTime <= allowedTime && dist <= thresholdLeft && Math.abs(touchobj.pageY - startY) <= 100){
-      console.log('swipe left')
-      swipeLeft()}
-    // e.preventDefault()
-}, false)
