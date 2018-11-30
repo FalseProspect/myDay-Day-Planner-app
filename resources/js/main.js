@@ -206,7 +206,7 @@ function submitItem(value,override){
           task: value
         };
         listItem(newItem);                                                //Mixin Object
-        if(/([#])\w+/g.test(value))wordTag(value)
+        // if(/([#])\w+/g.test(value))wordTag(value)
         // if(/([#])\w+/g.test(value))newItem.creationDate = tomorrowsDate()
         data.todo.push(newItem);                                          //Push to Data
         addItemTodo(newItem,false);                                       //Render Item
@@ -292,17 +292,21 @@ function addItemTodo(obj, completed){
   let task = obj.task;
 
   //#tags
-  let tagSymbs = /([#]|[@])\w+/g;
-  if (tagSymbs.test(task)){
+  let tagRegex = /([#]|[@])\w+/g;
+  if (tagRegex.test(task)){
       task = task.split(' ');
       let newTask = [];
-      newTask.push(task.map(word=>{if(tagSymbs.test(word)){
-        word = `<span class="tagged">${word}</span>`;
-        return word
-      };
-      return word;
-    }));
-    task = newTask[0].join(' ');
+      
+      for (let word in task){
+        
+        if(tagRegex.test(task[word])){
+          task[word] = `<span class="tagged">${task[word]}</span>`;
+          console.log(task);
+          newTask.push(task[word]);
+        } newTask.push(task[word]);
+        
+      }
+    task = newTask.join(' ');
   }
 
   //Create item elem and add text
