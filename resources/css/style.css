@@ -12,7 +12,7 @@
   --backColor: #edf0f1;                       /* Light: #edf0f1               | Dark:#282828 */
   --itemColor: #ffffff;                       /* Light: #ffffff               | Dark:#454545 */
   --containerTextColor: #666;                 /* Light: #666666               | Dark:#282828 */
-  --menuHoverColor: #999;                     /* Light: #999999               | Dark:#444444 */
+  --menuHoverColor: rgba(153,153,153,.1);    /* Light: #999999               | Dark:#444444 */
   --itemTextColor: #444;                      /* Light: #444444               | Dark:#DDDDDD */
   --buttonColor: #fff;                        /* Light: #ffffff               | Dark:#282828 */
   --itemCompleteColor: rgba(255,255,255,.25); /* Light: RGBA(255,255,255,.25) | Dark:RGBA(68,68,68,.3) */
@@ -415,7 +415,7 @@ ul.todoList::before{
   padding: 1em 0 1em 0;
   margin: 1em 0 1em 0;
   text-decoration: none;
-  background: var(--backColor);
+  /* background: var(--backColor); */
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   cursor: pointer;
@@ -554,7 +554,7 @@ ul.todoList li.over {
   }
 
   .menu a{
-    width: 168px;
+    width: 140px;
   }
   .menu a svg{
     width: 25px;
