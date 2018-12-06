@@ -1,7 +1,7 @@
 * {
   margin:0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', 'Open Sans', sans-serif;
 }
 
  /*Credit to Max Sandelin for base layout*/
@@ -17,17 +17,6 @@
   --buttonColor: #fff;                        /* Light: #ffffff               | Dark:#282828 */
   --itemCompleteColor: rgba(255,255,255,.25); /* Light: RGBA(255,255,255,.25) | Dark:RGBA(68,68,68,.3) */
 }
-
-[draggable] {
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-  /* Required to make elements draggable in old WebKit */
-  -khtml-user-drag: element;
-  -webkit-user-drag: element;
-}
-
 
 body{
   background: var(--backColor);
@@ -532,23 +521,28 @@ ul.todoList li.over {
   body{
     padding: 60px 0 0 0;
   }
+  
   header{
     height: 60px;
     padding: 8px;
   }
+  
   header input{
     height: 40px;
     padding: 0 50px 0 0;
   }
+
   header button{
     width: 40px;
     height: 40px;
     top: 7.5px;
     right: 7.5px;
   }
+  
   header button#Menu{
     top: 2px;
   }
+
   header button#logo{
     top: 5px;
   }
@@ -556,6 +550,7 @@ ul.todoList li.over {
   .menu a{
     width: 140px;
   }
+
   .menu a svg{
     width: 25px;
     height: 25px;

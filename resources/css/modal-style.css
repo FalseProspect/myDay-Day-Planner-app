@@ -1,0 +1,175 @@
+.modal-background{
+  position: fixed;
+  z-index: 7;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 12, 22, .8);
+  top: 0;
+  left: 0;
+  animation: fadein .1s;
+}
+
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-container{
+  position: relative;
+  z-index: 4;
+  width: calc(80vw - 50px);
+  min-width: 310px;
+  max-width: 550px;
+  height: auto;
+  background: var(--itemColor);
+  border-radius: 10px;
+  left: 0;
+  right: 0;
+  top: 10vh;
+  bottom: 0;
+  margin: auto auto;
+  color: var(--itemTextColor);
+  box-shadow: 0 0 100px 2px rgba(0, 12, 22, .8);
+  padding-bottom: 10px;
+}
+
+.modal-container div.titleBar{
+  position: relative;
+  width: 100%;
+  height: 50px;
+  background: var(--mainAccent);
+  top: 0;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  font-size: 18px;
+}
+
+.slideNum,
+.modalTitleLogo,
+.modalExit{
+  position: absolute;
+  padding: 15px 15px;
+  text-align: center;
+  color: var(--buttonColor);
+}
+
+.slideNum{
+  position: absolute;
+  left: 0;
+}
+
+.modalTitleLogo{
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+.modalTitleLogo svg{
+  fill: var(--buttonColor);
+  width: 100px;
+  height: 50px;
+}
+
+.modalExit{
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  font-family: monospace;
+}
+
+.modal-Graphic,
+.modal-Content,
+.modal-topicInfo{
+  position: relative;
+  margin: 2px auto;
+  width: 55%;
+  min-width: 300px;
+  height: 30vh;
+  max-height: 200px;
+}
+
+.modal-topicInfo{
+  height: auto;
+  max-height: 3rem;
+}
+
+.modal-Graphic{
+  margin: 10px auto;
+}
+
+.modal-Graphic img{
+  position: absolute;
+  max-width: 100%;
+  max-height: 100%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.modal-Content{
+  width: 95%;
+  min-width: 300px;
+  padding: 5px;
+  overflow-x: auto
+}
+
+.modal-container h1,
+.modal-container p{
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.modal-topicInfo hr{ 
+  border: 0; 
+  height: 1px; 
+  background-image: -webkit-linear-gradient(left, transparent, var(--mainAccent), transparent);
+  width: 70%;
+  margin: 0 auto;
+}
+
+.modal-button-container{
+  position: relative;
+  width: 30%;
+  min-width: 270px;
+  height: 2.5rem;
+  margin: 10px auto;
+}
+
+.modal-button-container button{
+  border: none;
+  height: 2.5rem;
+  width: 110px;
+  border-radius: 1.25rem;
+  font-family: 'Roboto';
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+}
+
+.secondaryBtn:hover{
+  border: 2px solid var(--mainAccent);
+  transition: all .2s ease;
+}
+
+.primaryBtn:hover{
+  border: 2px solid var(--itemTextColor);
+  transition: all .2s ease;
+}
+
+.primaryBtn{
+  position: absolute;
+  right: 0;
+  background: var(--mainAccent);
+  color: var(--buttonColor);
+}
+
+.secondaryBtn{
+  position: absolute;
+  left: 0;
+}

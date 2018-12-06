@@ -4,7 +4,7 @@
 document.getElementById('Menu').addEventListener('click', ()=>{
     menuOpen = !menuOpen;
     menuClickEvent(menuOpen);
-  })
+  });
   
   function menuClickEvent(value){
     document.getElementById('itemBin').style.marginLeft = menuOpen ? '150px' : '0';
@@ -18,7 +18,7 @@ document.getElementById('Menu').addEventListener('click', ()=>{
   document.getElementById('theme').addEventListener('click', function(){
     themeIndex !== themes.length - 1 ? themeIndex ++ : themeIndex = 0; 
     themeSwitch(themeIndex);
-  })
+  });
   
   //Theme Switcher
   function themeSwitch(index){
@@ -32,7 +32,7 @@ document.getElementById('Menu').addEventListener('click', ()=>{
   document.getElementById('night').addEventListener('click', function(){
     nightMode = !nightMode;
     setNightMode(nightMode);
-  })
+  });
   
   //Set Night Mode
   function setNightMode(value){
@@ -68,7 +68,7 @@ document.getElementById('Menu').addEventListener('click', ()=>{
   document.getElementById('add').addEventListener('click', function(){
     let value = document.getElementById('item').value.trim();
     if(value){submitItem(value)}
-  })
+  });
   
   //Header Logo and input bar transitions
   function headerStyling(){
@@ -85,7 +85,7 @@ document.getElementById('Menu').addEventListener('click', ()=>{
       isInputActive = false;
       headerStyling();}
   
-  })
+  });
   
   
   let focusedItem;
@@ -94,12 +94,12 @@ document.getElementById('Menu').addEventListener('click', ()=>{
     if(focusedItem && c.target !== focusedItem.element){
       itemEditUpdate()
     }
-  })
+  });
   
   document.addEventListener('keydown',(e)=>{
     //Update edited item on "Enter"
     if (e.key === "Enter" && focusedItem) {return itemEditUpdate()};
-  })
+  });
   
   function toggleItemEdit(item){
     elem = item
@@ -156,7 +156,7 @@ document.getElementById('Menu').addEventListener('click', ()=>{
         break;
       }
     }
-  })
+  });
   
   //Toggle CommandMode
   function toggleCommandMode(status) {
@@ -192,9 +192,9 @@ document.getElementById('Menu').addEventListener('click', ()=>{
         thresholdLeft = -150, //required min distance traveled to be considered swipe left
         allowedTime = 200, // maximum time allowed to travel that distance
         elapsedTime,
-        startTime
+        startTime;
 
-let doubleTapSurface = document.querySelectorAll('ul.todoList li')
+let doubleTapSurface = document.querySelectorAll('ul.todoList li');
 
 let dblTouch = 0;
 function dblTapEvent(elem){
@@ -230,12 +230,12 @@ touchsurface.addEventListener('touchstart', function(e){
     startY = touchobj.pageY
     startTime = new Date().getTime() // record time when finger first makes contact with surface
     // e.preventDefault()
-}, false)
+}, false);
  
 touchsurface.addEventListener('touchmove', function(e){
   if(focusedItem)return
     // e.preventDefault() // prevent scrolling when inside DIV
-}, false)
+}, false);
 
 touchsurface.addEventListener('touchend', function(e){
     if(focusedItem)return
@@ -250,4 +250,23 @@ touchsurface.addEventListener('touchend', function(e){
       console.log('swipe left')
       swipeLeft()}
     // e.preventDefault()
-}, false)
+}, false);
+
+
+document.getElementById('settings').addEventListener('click',()=>{
+  openTutorial();
+});
+
+//Modal
+function openTutorial(){
+  let css = document.createElement('link');
+  css.id= 'modal-style';
+  css.setAttribute('rel','stylesheet');
+  css.setAttribute('href','resources/css/modal-style.css');
+
+  document.head.appendChild(css)
+  let modal = document.createElement('script');
+  modal.id = 'modal';
+  modal.setAttribute('src','resources/js/modal.js');
+  document.body.appendChild(modal);
+}
