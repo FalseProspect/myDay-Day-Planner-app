@@ -263,8 +263,8 @@ function openTutorial(){
   css.id= 'modal-style';
   css.setAttribute('rel','stylesheet');
   css.setAttribute('href','resources/css/modal-style.css');
-
   document.head.appendChild(css)
+  
   let modal = document.createElement('script');
   modal.id = 'modal';
   modal.setAttribute('src','resources/js/modal.js');
