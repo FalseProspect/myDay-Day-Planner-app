@@ -75,10 +75,23 @@
 
 .modalExit{
   position: absolute;
-  right: 0;
+  right: 7.5px;
+  top: 7.5px;
+  width: 35px;
+  height: 35px;
+  padding: 0;
   cursor: pointer;
-  font-family: monospace;
+  background: var(--buttonColor);
+  border-radius: 25px;
 }
+
+.modalExit svg{
+  width: 15px;
+  height: 15px;
+  margin-top: 10px;
+  fill: var(--mainAccent);
+}
+
 
 .modal-Graphic,
 .modal-Content,
@@ -122,6 +135,7 @@
   width: 100%;
   margin: 0 auto;
   text-align: center;
+  transition: all .5s ease;
 }
 
 .modal-topicInfo hr{ 
@@ -172,3 +186,4 @@
 .secondaryBtn{
   position: absolute;
   left: 0;
+}
