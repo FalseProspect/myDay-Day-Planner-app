@@ -1,4 +1,3 @@
-//Checkout: phase-2
 
 //localStorage.clear();
 
@@ -301,9 +300,9 @@ function addItemTodo(obj, completed){
         
         if(tagRegex.test(task[word])){
           task[word] = `<span class="tagged">${task[word]}</span>`;
-          console.log(task);
+          // console.log(task);
           newTask.push(task[word]);
-        } newTask.push(task[word]);
+        } else newTask.push(task[word]);
         
       }
     task = newTask.join(' ');

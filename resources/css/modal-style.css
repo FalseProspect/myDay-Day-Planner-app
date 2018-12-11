@@ -90,6 +90,7 @@
   height: 15px;
   margin-top: 10px;
   fill: var(--mainAccent);
+  transform: rotate(45deg);
 }
 
 
@@ -122,23 +123,17 @@
   margin: 0 auto;
 }
 
-.modal-Content{
-  width: 95%;
-  min-width: 300px;
-  padding: 5px;
-  overflow-x: auto
-}
-.modal-Content pre{
-  max-width: 95%;
-}
-
 .modal-container h1,
 .modal-container p{
   position: relative;
   width: 100%;
   margin: 0 auto;
-  text-align: center;
+  /* text-align: center; */
   transition: all .5s ease;
+}
+
+.modal-topicInfo{
+  text-align: center;
 }
 
 .modal-topicInfo hr{ 
@@ -148,6 +143,27 @@
   width: 70%;
   margin: 0 auto;
 }
+
+.modal-Content{
+  width: 95%;
+  min-width: 300px;
+  padding: 5px;
+  overflow-y: auto;
+  text-align: left;
+  max-width: 95%;
+  /* animation: fadein .5s; */
+  /* animation: fadein .5s; */
+}
+
+.modal-Content p{
+  opacity: 0;
+}
+
+.fadein{
+  /* animation: fadein .5s; */
+  transition: opacity .33s ease;
+}
+
 
 .modal-button-container{
   position: relative;

@@ -13,21 +13,21 @@ console.log('Modal');
     graphic: ['resources/Icons/myDayAppLogoV2.png','resources/Icons/myDayAppLogoV2.png','resources/Icons/myDayAppLogoV2.png','resources/Icons/myDayAppLogoV2.png'],
     topic: ['Welcome','Tutroial:','Extras:','Done!'],
     info: [
-      `This is myDay:Day Planner is a easy to use note-taking web application to allow easy planning, scheduling and overview of your day.`,
-      `It's easy to use!
-        - Used the input bar at the top of the application to describe a task, event, or activity.
-        - Use the submit button or "Enter" key to add it to your day.
-        - To mark na item complete, press the done button (Checkmark).
-        - To remove an item, press the trash button (Trash can).
-        - To edit an item, double click the item text area.
-        - The menu can be opened using the button in the top left corner, to access other useful settings and filters.
+      `The myDay:Day Planner is an easy to use note-taking web application to allow easy planning, scheduling and overview of your day.<br>`,
+      `It's easy to use!<br>
+        - Used the input bar at the top of the application to describe a task, event, or activity<br>
+        - Use the submit button or "Enter" key to add it to your day<br>
+        - To mark an item complete, press the (Checkmark) button<br>
+        - To remove an item, press the (Trash can) button<br>
+        - To edit an item, double click the item text area<br>
+        - The menu can be opened using the button in the top left corner, to access other useful settings and filters
       `,
-      `- Sign in using google to save and sync your day across your items (desktop/mobile).
-        - Use schedule your day by including a @ symbol followed by a time (eg. @12:00PM, @Noon, or @Midday)
-        - Tag events in your day by using the # symbol followed by your desired tag, and they can be filter using the sidebar.
-        - Personalize your Day Planner app using our collection of themes aswell as a dark mode option.
+      `- Sign in using google to save and sync your day across your devices<br>
+        - Use schedule your day by including a @ symbol followed by a time (eg. @12:00PM)<br>
+        - Tag events in your day by using the # symbol followed by your desired tag, and they can be filter using the sidebar<br>
+        - Personalize your Day Planner app using our collection of themes aswell as a dark mode option
       `,
-      `That's it! Your ready to be more productive using myDay: Day Planner.
+      `That's it! Your ready to be more productive using myDay: Day Planner.<br>
         If you wish to access the tutorial again or review other special setting, they can be found in the settings menu.`]
   };
 
@@ -71,7 +71,8 @@ console.log('Modal');
     container.appendChild(modalTopicInfo);
 
   let modalContent = makeElement('div', 'modal-Content');
-    let modalContentInnerText = makeElement('pre');
+  let modalContentInnerText = makeElement('p');
+    modalContentInnerText.classList.add('fadein');
     modalContent.appendChild(modalContentInnerText);
     container.appendChild(modalContent);
 
@@ -123,10 +124,16 @@ console.log('Modal');
     console.log(slide);
 
     //Render Elems
-    slideNum.innerText = info.slide[slide];
+    modalContentInnerText.classList.remove('fadein');
+    modalContentInnerText.style.opacity='0';
+    setTimeout(()=>{
+      modalContentInnerText.classList.add('fadein');
+      modalContentInnerText.style.opacity='1';
+      modalContentInnerText.innerHTML = info.info[slide];
+    },700);
+    slideNum.innerText = info.slide[slide]; 
     modalGraphicImg.setAttribute('src', info.graphic[slide]);
     topicH1.innerText= info.topic[slide];
-    modalContentInnerText.innerHTML = info.info[slide];
   }
   
   displaySlide(0);

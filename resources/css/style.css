@@ -7,7 +7,7 @@
  /*Credit to Max Sandelin for base layout*/
 
 :root{
-  --mainAccent: #46237a;
+  --mainAccent: rgba(255,255,255,0);
   --inputTextColor: #fff;                     /* Light: #ffffff               | Dark:#282828 */
   --backColor: #edf0f1;                       /* Light: #edf0f1               | Dark:#282828 */
   --itemColor: #ffffff;                       /* Light: #ffffff               | Dark:#454545 */
@@ -198,7 +198,14 @@ ul.todoList li{
   white-space: wrap; 
   overflow:hidden;
   overflow-y: hidden;
+  animation: fadein .3s;
 }
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 
 body::-webkit-scrollbar-track
 {
