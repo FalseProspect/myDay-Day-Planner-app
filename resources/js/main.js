@@ -55,9 +55,9 @@ const themes = [
   new theme('Honey','RGBA(243,167,18,1)'),    // #F3A712 RGBA(243,167,18,1)
   new theme('Salmon','RGBA(255,113,91,1)'),
   new theme('Skyblue', 'skyblue'),
-  new theme('Royal','RGBA(66,2,111,1)'),     // #42026F RGBA(90,45,158,1)
-  new theme('Witch','#4b367c'),     // #42026F RGBA(90,45,158,1)
-  new theme('Tiffany','#00DFE1'),     // #42026F RGBA(90,45,158,1)
+  new theme('Royal','RGBA(66,2,111,1)'),      // #42026F RGBA(90,45,158,1)
+  new theme('Witch','#4b367c'),              
+  new theme('Tiffany','#00DFE1'),             
   new theme('Mint','RGBA(37,185,154,1)')];    // #25B99A RGBA(37,185,154,1)
 
 //List Item Class
@@ -83,7 +83,9 @@ setNightMode(nightMode);
 //Menu Status
 menuClickEvent(menuOpen);
 
-/////// HTML REQUEST \\\\\\\\
+
+
+// HTML REQUEST \\\\\\\\
 
 //Set values if a user is signed in
 (function profileTabUsername(){
@@ -253,7 +255,7 @@ function renderList(renderView){
       }
       break;
     default: 
-    console.log(`Viewing: ${renderView} resulted in a error`);
+    alert(`Viewing: ${renderView} resulted in a error`);
   }
 };
 
@@ -278,9 +280,6 @@ function unRenderList(){
 function dataObjectUpdate(){
   if(userClient)return;
   localStorage.setItem('todoList', JSON.stringify(data));
-//   let cols = document.querySelectorAll('ul.todoList li');
-// [].forEach.call(cols, addDnDHandlers);
-//console.log(data);
 };
 
 /////// ITEM MANIPULATION FUNCTIONS \\\\\\\---------------------------------------------------------------------------------------------
@@ -311,6 +310,7 @@ function addItemTodo(obj, completed){
   //Create item elem and add text
   let item = document.createElement('li');
   item.innerHTML += task;
+
   //Create button elements
   let buttons = document.createElement('div');
   buttons.classList.add ('buttons');
@@ -356,7 +356,6 @@ function addItemTodo(obj, completed){
     item.setAttribute('title',`Deleted: ${obj.deletionDate}`);
       break;
   }
-  //item.setAttribute('draggable', 'true');
 
   //Decide which list to add to
   if (!document.getElementById(item.getAttribute('data-date'))) newList(item.getAttribute('data-date'));

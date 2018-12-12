@@ -84,8 +84,8 @@ document.getElementById('Menu').addEventListener('click', ()=>{
   document.body.addEventListener('click',(c)=>{
     if(document.activeElement !== document.getElementById('item')){
       isInputActive = false;
-      headerStyling();}
-  
+      headerStyling();
+    }
   });
   
   
@@ -185,15 +185,15 @@ document.getElementById('Menu').addEventListener('click', ()=>{
     document.getElementById('item').value = inputHistory[inputHistoryIndex];
   }
 
-  let touchsurface = document.body,
-        startX,
-        startY,
-        dist,
-        thresholdRight = 150, //required min distance traveled to be considered swipe right
-        thresholdLeft = -150, //required min distance traveled to be considered swipe left
-        allowedTime = 200, // maximum time allowed to travel that distance
-        elapsedTime,
-        startTime;
+let touchsurface = document.body,
+    startX,
+    startY,
+    dist,
+    thresholdRight = 150, //required min distance traveled to be considered swipe right
+    thresholdLeft = -150, //required min distance traveled to be considered swipe left
+    allowedTime = 200, // maximum time allowed to travel that distance
+    elapsedTime,
+    startTime;
 
 let doubleTapSurface = document.querySelectorAll('ul.todoList li');
 
