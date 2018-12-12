@@ -7,7 +7,7 @@
  /*Credit to Max Sandelin for base layout*/
 
 :root{
-  --mainAccent: rgba(255,255,255,0);
+  --mainAccent: rgba(79,84,255,0);
   --inputTextColor: #fff;                     /* Light: #ffffff               | Dark:#282828 */
   --backColor: #edf0f1;                       /* Light: #edf0f1               | Dark:#282828 */
   --itemColor: #ffffff;                       /* Light: #ffffff               | Dark:#454545 */
@@ -207,13 +207,13 @@ ul.todoList li{
 }
 
 
-body::-webkit-scrollbar-track
+*::-webkit-scrollbar-track
 {
 	border-radius: 10px;
 	background-color: transparent;
 }
 
-body::-webkit-scrollbar
+*::-webkit-scrollbar
 {
   height: 5px;
   width: 5px;
@@ -221,7 +221,7 @@ body::-webkit-scrollbar
   z-index: 3;
 }
 
-body::-webkit-scrollbar-thumb
+*::-webkit-scrollbar-thumb
 {
   border-radius: 10px;
 	background-color: var(--buttonColor);

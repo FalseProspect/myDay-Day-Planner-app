@@ -255,19 +255,20 @@ touchsurface.addEventListener('touchend', function(e){
 
 
 document.getElementById('settings').addEventListener('click',()=>{
-  openTutorial();
+  openSettings();
 });
 
-//Modal
-function openTutorial(){
-  let css = document.createElement('link');
-  css.id= 'modal-style';
-  css.setAttribute('rel','stylesheet');
-  css.setAttribute('href','resources/css/modal-style.css');
-  document.head.appendChild(css)
-  
-  let modal = document.createElement('script');
-  modal.id = 'modal';
-  modal.setAttribute('src','resources/js/modal.js');
-  document.body.appendChild(modal);
-}
+//Settings Modal
+function openSettings(){
+    let css = document.createElement('link');
+    css.id= 'settingsModal-style';
+    css.setAttribute('rel','stylesheet');
+    css.setAttribute('href','resources/css/settingsModal.css');
+    document.head.appendChild(css)
+    
+    let modal = document.createElement('script');
+    modal.id = 'settingsModal';
+    modal.setAttribute('src','resources/js/settingsModal.js');
+    document.body.appendChild(modal);
+};
+
